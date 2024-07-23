@@ -1,0 +1,14 @@
+<fade-in class="comentario block -mt-20 ease-in-out" 
+_="on load transition my margin-top to 0 over 0.2 seconds then transition my opacity to 1 over 0.4 seconds">
+    {% include 'equipamentos/pages/comment.html' %}
+</fade-in>
+
+
+
+<div hx-swap-oob="true" id="comments-{{ equipamento.id }}" class="font-bold">
+    {% if equipamento.comments.count %}
+        <span id="commentscount-{{ equipamento.id }}" class="font-light text-gray-500 ml-1">{{ equipamento.comments.count }} Comentário{{ equipamento.comments.count|pluralize:'s' }}</span>
+    {% else %}
+        <span class="font-light text-gray-500 ml-1">Adicionar comentário</span>
+    {% endif %}
+</div>

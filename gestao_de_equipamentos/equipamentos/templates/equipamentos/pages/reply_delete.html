@@ -1,0 +1,22 @@
+{% extends 'equipamentos/pages/b.html' %}
+
+{% block content %}
+
+<h1>Deletar Resposta</h1>
+
+<div class="respost card px-6 pt-3 text-md mb-6 [&>*>*>a]:text-sm">
+
+    {% include 'equipamentos/pages/reply.html' %}
+
+</div>
+
+<p class="mb-6">Você tem certeza que deseja deletar essa resposta?</p>
+
+<form method='POST'>
+    {% csrf_token %}
+    <a class="button btn btn-secondary btn-sm ml-1" href="{{ request.META.HTTP_REFERER }}">Voltar</a>
+    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+</form>
+
+
+{% endblock %}

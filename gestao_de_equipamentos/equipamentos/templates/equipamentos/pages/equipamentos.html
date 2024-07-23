@@ -1,0 +1,78 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+  <div class="conteudo fundo-branco">
+    <header class="cabecalho">
+      <h1><strong>Equipamentos</strong></h1>
+      <div class="barra"></div>
+    </header>
+    <div class="centro">
+      {% if laboratorios %}
+        {% include "global/partials/mensagens.html" %}
+        <form method="GET" id="search-form" class="form-search mb-4" data-tags_filtro="{{ request.GET.tags_filtro }}">
+          <div class="filter-div">
+              <label class="control-label" for="filter">Laboratório:</label>
+              <select name="filter" id="filter">
+                {% for laboratorio in laboratorios %}
+                  <option value="{{ laboratorio.slug }}">{{ laboratorio.nome }}</option>
+                {% endfor %}
+              </select>
+            </div>
+              <div class="col-9 search-div {% if not equipamentos %}esconder{% endif %}">
+                <input type="text" class="form-control search" name="search" id="search" placeholder="Digite o nome do equipamento para buscar..."  value="{{ request.GET.search }}">
+                <i class="fa fa-search {% if request.GET.search %}search_true{% endif %}" id="search-btn"></i>
+                {% if request.GET.search %}
+                  <button type="button" id="clear-search" class="btn btn-danger btn-clean">Limpar</button>
+                {% endif %}
+              </div>
+              <div class="filter-div">
+                <label class="control-label" for="tags_filtro">Categoria:</label>
+                <select name="tags_filtro" id="tags_filtro">
+                  <option value="">Selecionar Categoria...</option>
+                  {% for tag in tags %}
+                    <option value="{{ tag.slug }}">{{ tag.nome }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+          </form>
+        {% if user.link_type == 'Servidor' or user.is_admin %}
+          <a class="link-botao" href="{% url 'equipamentos:adicionar_equipamento' %}">
+            <div class="botao-acao-adm">
+              <img src="{% static "global/icons/adicionar.png" %}" alt="Ícone de adicionar." class="icone">
+              <h3>Adicionar Equipamento</h3>
+            </div>
+          </a>
+        {% endif %}
+        {% if equipamentos %}
+          <section class="equipamentos" id="equips">
+            {% for equipamento in equipamentos %}
+              {% include 'equipamentos/pages/equipamentos_list.html' %}
+            {% endfor %}
+          </section>
+          {% include 'global/partials/paginacao.html' %} 
+        {% else %}
+          <h3 class="nada-existente">Nenhum Equipamento foi cadastrado neste laboratório.</h3>
+        {% endif %}
+      {% else %}
+        <h3 class="nada-existente">Cadastre algum laboratório para poder adicionar os equipamentos.</h3>
+      {% endif %}
+    </div>
+    <div class="espacamento-fantasma"></div>
+  </div>
+
+
+  {% block js %}
+    <script>
+      $(function () {
+          $("#search").autocomplete({
+              source: '{% url "equipamentos:autocomplete" %}?filter={{request.GET.filter}}',
+              autoFocus: true,
+          });
+      });
+    </script>
+  {% endblock js %}
+{% endblock conteudo %}
+

@@ -1,0 +1,25 @@
+{% extends 'equipamentos/pages/b.html' %}
+
+
+{% block content %}
+
+<div class="md:flex items-center">
+    <div class="equips card w-full md:max-w-sm mr-6 md:[&>*>*>p]:text-4xl">
+        
+        {% include 'equipamentos/pages/equipamentos_list.html' %}
+
+    </div>
+    <div>
+        <h1>Deletar Equipamento</h1>
+        <p class="my-6">Você tem certeza que quer deletar o {{ equipamento.titulo }}?</p>
+
+        <form method='POST'>
+            {% csrf_token %}
+            <a class="button btn btn-secondary btn-sm ml-1" href="{{ request.META.HTTP_REFERER }}">Voltar</a>
+            <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

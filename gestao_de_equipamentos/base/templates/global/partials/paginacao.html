@@ -1,0 +1,44 @@
+{% if equipamentos.has_other_pages %}
+<div class="btn-group" role="group" aria-label="Item pagination">
+    {% if equipamentos.has_previous %}
+        {% if request.GET.filter or request.GET.search or request.GET.tag %}
+            <a href="?page={{ equipamentos.previous_page_number }}&filter={{ request.GET.filter }}&tag={{ request.GET.tag }}&search={{ request.GET.search }}" class="btn btn-outline-primary">&laquo;</a>
+        {% else %}
+            <a href="?page={{ equipamentos.previous_page_number }}" class="btn btn-outline-primary">&laquo;</a>
+        {% endif %}
+    {% endif %}
+
+    {% for page_number in equipamentos.paginator.page_range %}
+
+        {% if request.GET.filter or request.GET.search or request.GET.tag %}
+            {% if equipamentos.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                    <span class="pagina">{{ page_number }} <span class="sr-only">(Atual)</span></span>
+                </button>
+            {% else %}
+                <a href="?page={{ page_number }}&filter={{ request.GET.filter }}&tag={{ request.GET.tag }}&search={{ request.GET.search }}" class="btn btn-outline-primary">
+                    {{ page_number }}
+                </a>
+            {% endif %}
+        {% else %}
+            {% if equipamentos.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                    <span class="pagina">{{ page_number }} <span class="sr-only">(Atual)</span></span>
+                </button>
+            {% else %}
+                <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                    {{ page_number }}
+                </a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if equipamentos.has_next %}
+        {% if request.GET.filter or request.GET.search or request.GET.tag %}
+            <a href="?page={{ equipamentos.next_page_number }}&filter={{ request.GET.filter }}&tag={{ request.GET.tag }}&search={{ request.GET.search }}" class="btn btn-outline-primary">&raquo;</a>
+        {% else %}
+            <a href="?page={{ equipamentos.next_page_number }}" class="btn btn-outline-primary">&raquo;</a>
+        {% endif %}
+    {% endif %}
+</div>
+{% endif %}

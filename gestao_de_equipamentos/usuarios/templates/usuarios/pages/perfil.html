@@ -1,0 +1,70 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+    <div class="conteudo fundo-branco">
+      <header class="cabecalho">
+        <h1><strong>Perfil</strong></h1>
+        <div class="barra"></div>
+      </header>
+      <div id="user-tools" class="perfil">
+        {% comment %} {% load cache %} {% endcomment %}
+        {% comment %} {% cache 500 user.photo1 %} {% endcomment %}
+          <img src="{{ user.photo1 }}" alt="Ícone de usuário." class="foto-pessoal" >
+        {% comment %} {% endcache %} {% endcomment %}
+      </div>
+      <div class="informacoes-usuario">
+        <div class="matricula">
+          <h3>Matrícula</h3>
+          <p>{{ user.registration }}</p>
+        </div>
+        <div class="nome">
+          <h3>Nome</h3>
+          <p>{{ user.full_name }}</p>
+        </div>
+        <div class="cpf">
+          <h3>CPF</h3>
+          <p>{{ user.cpf }}</p>
+        </div>
+        {% if user.campus %}
+          <div class="campus">
+            <h3>Campus</h3>
+            <p>{{ user.campus }}</p>
+          </div>
+        {% endif %}
+        {% if user.course %}
+          <div class="curso">
+            <h3>Curso</h3>
+            <p>{{ user.course }}</p>
+          </div>
+        {% endif %}
+        <div class="tipo-usuario">
+          <h3>Vínculo</h3>
+          <p>{{ user.link_type }}</p>
+        </div>
+        <div class="sexo">
+          <h3>Sexo</h3>
+          {% if user.sex == 'M' %}
+            <p>Masculino</p>
+          {% else %}
+            <p>Feminino</p>
+          {% endif %}
+        </div>
+        <div class="data-nascimento">
+          <h3>Data de Nascimento</h3>
+          <p>{{ user.date_of_birth }}</p>
+        </div>
+        <div class="email">
+          <h3>E-mails</h3>
+          <div class="emails">
+            <p>{{ user.personal_email }}</p>
+            <p>{{ user.school_email }}</p>
+            <p>{{ user.academic_email }}</p>
+          </div>
+        </div>
+        <div class="espacamento-fantasma"></div>
+      </div>
+    </div>
+
+{% endblock conteudo %}

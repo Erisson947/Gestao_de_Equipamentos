@@ -1,0 +1,17 @@
+{% extends 'equipamentos/pages/b.html' %}
+
+{% block content %}
+
+<h1>Deletar Comentário</h1>
+
+{% include 'equipamentos/pages/comment.html' %}
+
+<p class="my-6">Você tem certeza que quer deletar esse comentário?</p>
+
+<form method='POST'>
+    {% csrf_token %}
+    <a class="button btn btn-secondary btn-sm ml-1" href="{{ request.META.HTTP_REFERER }}">Voltar</a>
+    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+</form>
+
+{% endblock %}

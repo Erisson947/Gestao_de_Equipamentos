@@ -1,0 +1,8 @@
+{% block js %}
+    {% for flashmsg in messages %}
+    <script>
+        alertify.set('notifier','position', 'top-right');
+        alertify.success('{{flashmsg}}');
+    </script>
+    {% endfor %}
+{% endblock js %}

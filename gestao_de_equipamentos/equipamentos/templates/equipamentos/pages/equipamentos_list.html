@@ -1,0 +1,135 @@
+{% load static %}
+
+<a id="id_equipamento-{{equipamento.id}}" href="{% url "equipamentos:visualizar_equipamento" equipamento.slug %}" class="equipamento">
+    <div class="notificacoes flex gap-2">
+      {% for key, value in notificacoes.items %}
+        {% if key == 'unread_notifications_equips_update' %}
+          {% for key, value in value.items %}
+            {% if key == equipamento and value %}
+              <div class="sino">
+                <span class="nao_lido">
+                  {{ value }}
+                </span>
+                <span class="fa fa-edit" aria-hidden="true"></span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% for key, value in notificacoes.items %}
+        {% if key == 'unread_notifications_equips_add' %}
+          {% for notificacao in value %}
+            {% if notificacao.action_object == equipamento %}
+              <div class="sino">
+                <span class="fa fa-bell-o no" aria-hidden="true"></span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    <img src="{{ equipamento.capa.url }}" alt="Capa da notícia." class="capa-equipamento">
+    <div class="informacoes-equipamento">
+      <h3 class="titulo-equipamento">{{ equipamento.titulo }}</h3>
+      <h3 class="titulo-equipamento">{{ equipamento.laboratorio }}</h3>
+      <div class="equips-tags-container">
+        {% if equipamento.tags.all %}
+          {% for tag in equipamento.tags.all %}
+            <span class="equips-tag-item flex items-center truncate mr-2">{% if tag.capa %}<img src="{{ tag.capa.url }}" class="w-8 h-8 object-cover rounded-full mr-2" alt="Icone da tag.">{% endif %}{{ tag.nome }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="equips-tag-item">sem tags</span>
+        {% endif %}
+      </div>
+
+      <div class="equipamentos">
+        <div class="total_eq">
+          <h3>Total: </h3>
+          {% if equipamento.total_eq >= 0 %}
+            <p> {{ equipamento.total_eq }}</p>
+          {% else %}
+            <p> Não informado</p>
+          {% endif %}
+        </div>
+        <div class="equ_func equ_func_color">
+          <h3>Func.: </h3>
+          {% if equipamento.equ_func >= 0 %}
+            <p> {{ equipamento.equ_func }}</p>
+          {% else %}
+            <p> Não informado</p>
+          {% endif %}
+        </div>
+        <div class="equ_queb equ_queb_color">
+          <h3>Queb.: </h3>
+          {% if equipamento.equ_queb >= 0 %}
+            <p> {{ equipamento.equ_queb }}</p>
+          {% else %}
+            <p> Não informado</p>
+          {% endif %}
+        </div>
+        <div class="equ_em_manut equ_em_manut_color">
+          <h3>Manut.: </h3>
+          {% if equipamento.equ_em_manut >= 0 %}
+            <p> {{ equipamento.equ_em_manut }}</p>
+          {% else %}
+            <p> Não informado</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="comme flex items-stretch coment p-4 {% if equipamento.comments.first.status == True %}concluido-comment{% endif %}">
+        <div id="comments-{{ equipamento.id }}" class="font-bold justify-between flex gap-1 items-center">
+          {% if equipamento.comments.count %}
+            <span id="commentscount-{{ equipamento.id }}" class="font-light text-gray-500 ml-1">{{ equipamento.comments.count }} Comentário{{ equipamento.comments.count|pluralize:'s' }}</span>
+            <div class="notificacoes flex gap-2">
+              <div class="sino">
+                <span class="nao_lido">
+                  {% for key, value in notificacoes.items %}
+                    {% if key == 'unread_notifications_comments_replies_update' %}
+                      {% for key, value in value.items %}
+                        {% if key == equipamento %}
+                          {{ value }}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <span class="fa fa-edit" aria-hidden="true"></span>
+              </div>
+              <div class="sino">
+                <span class="nao_lido">
+                  {% for key, value in notificacoes.items %}
+                    {% if key == 'unread_notifications_comments_replies_add' %}
+                      {% for key, value in value.items %}
+                        {% if key == equipamento %}
+                          {{ value }}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <span class="fa fa-bell-o" aria-hidden="true"></span>
+              </div>
+            </div>
+          {% else %}
+            <span class="font-light text-gray-500 ml-1">Sem comentários</span>
+          {% endif %}
+        </div>
+        {% if equipamento.comments.first %}
+        <div class="flex items-center truncate">
+            {% if equipamento.comments.first.author %}
+              <img class="w-10 h-10 rounded-full object-cover mr-1" src="{{ equipamento.comments.first.author.photo2 }}">
+            {% else %}
+              <img class="w-10 h-10 rounded-full object-cover mr-1" src="{% static 'global/img/icone-usuario.png' %}">
+            {% endif %}
+            <span class="font-light mr-1 truncate">{% if equipamento.comments.first.author %}{{ equipamento.comments.first.author.name }}{% else %}<span class="font-light">no author</span>{% endif %}: {{ equipamento.comments.first.body|truncatechars:10 }}</span>
+        </div>
+        {% endif %}
+      </div>
+      <p class="data-publicacao-equipamento">
+        Publicado em {{ equipamento.criado_em|date:"d/m/Y" }} às {{ equipamento.criado_em|date:"H\hi\m\i\n" }}
+        {% if equipamento.criado_em|date:"d/m/Y H:i" != equipamento.atualizado_em|date:"d/m/Y H:i" %}
+          | Atualizado em {{ equipamento.atualizado_em|date:"d/m/Y" }} às {{ equipamento.atualizado_em|date:"H\hi\m\i\n" }}
+        {% endif %}
+      </p>
+    </div>
+</a>

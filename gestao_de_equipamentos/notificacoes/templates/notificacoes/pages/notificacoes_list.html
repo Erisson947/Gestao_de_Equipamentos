@@ -1,0 +1,18 @@
+<div class="alert alert-block alert-{{ notice.level }} text-align-justify">
+  <a class="close pull-right" href="{% url 'notificacoes:mark_as_read' notice.slug %}">
+    <i class="fa fa-close"></i>
+  </a>
+  
+  <div class="mr-5">
+    <h4>
+      <i class="fa fa-envelope-o"></i>
+      {{ notice.actor }} <br>
+      {{ notice.verb }}
+    </h4>
+    <br>
+    
+    <p>{{ notice.description|linebreaksbr }} à {{ notice.timesince }} atrás!</p>
+  </div>
+  
+  
+</div>

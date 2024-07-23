@@ -1,0 +1,35 @@
+<div class="modal-content">
+<div class="modal-header">
+    <h5 class="modal-title">Equipamentos associados ao laboratório {{laboratorio.nome}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+        <table class="table">
+            <thead>
+              <tr>
+                <th>Equipamentos</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% if equipamentos %}
+                    {% for equipamento in equipamentos %}
+                    <tr id="equipamento-{{ equipamento.slug }}" class="movie-row">
+                    <td>{{equipamento.titulo}}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td class="no">Nenhum equipamento associado a esse laborário!</td>
+                </tr>
+                {% endif %}
+            </tbody>
+          </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      Voltar
+    </button>
+  </div>
+</div>

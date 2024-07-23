@@ -1,0 +1,134 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% load widget_tweaks %}
+
+{% block conteudo %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+  <div class="conteudo fundo-branco">
+    <header class="cabecalho">
+        <h1><strong>{% if equipamento %}Editar {{ equipamento.titulo }}{% else %}Adicionar Equipamento{% endif %}</strong></h1>
+        <div class="barra"></div>
+    </header>
+    <div class="centro">
+      <form class="formulario" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.errors %}
+          {% for error in form.non_field_errors %}
+            <p class="erro-formulario">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+        {% for campo in form %}
+          
+        {% if campo.name == "capa" %}
+        <div class="grupo-campo">
+            <label class="bold" for="{{ campo.id_for_label }}"><strong>{{ campo.label_tag }}</strong></label>
+            <div id="dropzone-container" class="dropzone-default">
+                <img src="{% static "global/icons/upload.png" %}" alt="" draggable="false">
+                {% render_field campo %}
+                {% if equipamento %}
+                    <span><strong>Atualmente:</strong> {{equipamento.capa}} ({{equipamento.capa.size}} bytes)</span>
+                {% endif %}
+                <span>{% if equipamento %}<strong>Novo:</strong>{% endif %} <span id="dropzone-file-info">Nenhum arquivo selecionado.</span></span>
+                <button id="dropzone-upload-button" class="btn btn-success" type="button">
+                    <span>Selecionar arquivo</span>
+                </button>
+                <p>... ou arraste o arquivo até aqui.</p>
+                <div class="invalid-feedback">{{ campo.errors|first }}</div>
+                {% if equipamento.capa %}
+                    <a class="dropzone-cover-link" href="{{ equipamento.capa.url }}" target="_blank">Clique aqui para ver a capa atual.</a>
+                {% endif %}
+                <div id="dropzone-area"></div>
+            </div>
+            
+        </div>
+        {% elif campo.name == 'titulo' or campo.name == 'laboratorio' or campo.name == 'tags' %}
+        <div class="grupo-campo">
+            <label class="bold" for="{{ campo.id_for_label }}"><strong>{{ campo.label_tag }}</strong></label>
+            {% render_field campo %}
+            <div class="invalid-feedback">{{ campo.errors|first }}</div>
+        </div>
+
+        {% elif campo.name == 'detalhar' %}
+        <div class="grupo-campo checkbox_detal" >
+            <label class="bold" for="{{ campo.id_for_label }}"><strong>{{ campo.label_tag }}</strong></label>
+            {% render_field campo %}
+            <div class="invalid-feedback">{{ campo.errors|first }}</div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        <table class="table">
+        {% for campo in form %}
+            {% if campo.name == 'total_eq' %}
+            <thead>
+                <tr>
+                <th></th>
+                <th><label class="bold" for="{{ campo.id_for_label }}"><strong>{{ campo.label_tag }}</strong></label></th>
+                <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="movie-row">
+                <td></td>
+                <td>{% render_field campo class="form-control" %} <div class="invalid-feedback">{{ campo.errors|first }}</div></td>
+                <td></td>
+                </tr>
+            </tbody>
+            
+            {% endif %}
+        {% endfor %}
+        <thead>
+            <tr>
+            {% for campo in form %}
+                {% if campo.label == 'Equipamentos Funcionando' or campo.label == 'Equipamentos Quebrados' or campo.label == 'Equipamentos em Manutenção' %}
+                    <th><label class="bold" for="{{ campo.id_for_label }}"><strong>{{ campo.label_tag }}</strong></label></th>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="movie-row">
+            {% for campo in form %}
+                {% if campo.name == 'equ_func' or campo.name == 'equ_queb' or campo.name == 'equ_em_manut' %}
+                <td>{% render_field campo class="form-control" %} <div class="invalid-feedback">{{ campo.errors|first }}</div></td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+            
+            <tr id="detalhes_equipamentos" class="movie-row">
+            {% for campo in form %}
+                {% if campo.name == 'detal_equ_func' or campo.name == 'detal_equ_queb' or campo.name == 'detal_equ_em_manut' %}
+                <td>{% render_field campo class="form-control" %} <ul><li>{{ campo.help_text }}</li></ul> <div class="invalid-feedback">{{ campo.errors|first }}</div></td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+            
+        </tbody>
+        </table>
+        {% for campo in form %}
+        {% if campo.name == 'conteudo' %}
+            <div class="grupo-campo" id="conteud">
+            <label class="bold" for="{{ campo.id_for_label }}"><strong>{{ campo.label_tag }}</strong></label>
+            {% render_field campo class="form-control" %}
+            <ul><li>{{ campo.help_text }}</li></ul>
+            <div class="invalid-feedback">{{ campo.errors|first }}</div>
+            
+            </div>
+        {% endif %}
+        {% endfor %}
+        <div class="botoes-formulario">
+        <a class="botao-link" href="{% url 'equipamentos:equipamentos' %}">Cancelar</a>
+        <button class="botao" type="submit">Salvar</button>
+        </div>
+    </form>
+    </div>
+</div>
+
+{% endwith %}
+
+{% block js %}
+    <script src="{% static 'global/js/dropzone.js' %}"></script>
+{% endblock js %}
+{% endblock conteudo %}
+

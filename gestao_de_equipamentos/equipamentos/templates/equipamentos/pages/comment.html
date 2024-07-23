@@ -1,0 +1,143 @@
+{% load static %}
+<comment id="comentario-{{ comment.id }}" class="card p-4 !mb-4 {% if comment.status == True %}concluido-comment{% endif %}">
+    <div class="usuario flex justify-between items-center"> 
+        {% if comment.author %}
+            {% if comment.author == user %}
+                <a class="flex items-center gap-1 mb-2" href="{% url "usuarios:perfil" %}">
+                    <img class="w-8 h-8 object-cover rounded-full" src="{{ comment.author.photo2 }}"> 
+                    <span class="font-bold hover:underline">{{ comment.author.name}}</span>
+                </a>
+            {% else %}
+                <div class="flex items-center gap-1 mb-2">
+                    <img class="w-8 h-8 object-cover rounded-full mr-2" src="{{ comment.author.photo2 }}">
+                    <span class="font-bold hover:underline">{{ comment.author.name }}</span>
+                </div>
+            {% endif %}
+        {% else %}
+        <div class="flex items-center gap-1 mb-4">
+            <img class="w-8 h-8 object-cover rounded-full" src="{% static 'global/img/icone-usuario.png' %}">
+            <span class="text-gray-500">Sem autor</span>
+        </div>
+        {% endif %}
+        <div class="notificacoes flex gap-2">
+        {% for key, value in notificacoes.items %}
+            {% if key == 'unread_notifications_comments_add' %}
+            {% for notificacao in value %}
+                {% if notificacao.action_object == comment %}
+                <div class="sino">
+                    <span class="fa fa-bell-o no" aria-hidden="true"></span>
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        {% endfor %}
+      {% for key, value in notificacoes.items %}
+        {% if key == 'unread_notifications_comments_update' %}
+          {% for key, value in value.items %}
+            {% if key == comment and value %}
+              <div class="sino">
+                <span class="nao_lido">
+                    {{ value }}
+                </span>
+                <span class="fa fa-edit" aria-hidden="true"></span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    </div>
+    <div class="flex justify-between comment-body">
+        {% if form %}
+        <form class="flex items-center p-4" autocomplete="off"
+            hx-post="{% url 'equipamentos:comment-edit' comment.id %}" 
+            hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+            hx-target="#comentario-{{ comment.id }}"
+            hx-swap="outerHTML">
+                {{ form }}
+                <a class="button btn btn-secondary btn-sm ml-1" href="" hx-get="{% url 'equipamentos:comment-status' comment.id %}" hx-target="#comentario-{{ comment.id }}" hx-swap="outerHTML">Cancelar</a>
+            <button @click="open = false" class="btn btn-success ml-2" type="submit">Salvar</button>
+        </form>
+        {% else %}
+        <p class="comentario-body text-xl px-2">
+            {{ comment.body }}
+        </p>
+        {% endif %}
+        {% if user.link_type == 'Servidor' or user.is_admin %}
+            <span class="concluir-comment" hx-post="{% url 'equipamentos:comment-status' comment.id %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' hx-target="#comentario-{{ comment.id }}" hx-swap="outerHTML"><i class="fa fa-check"></i></span>
+        {% endif %}
+        </div>
+    <div x-data="{ repliesOpen: false }" class="flex items-center justify-between flex-wrap text-sm px-2">
+        <div class="flex gap-2 items-center">
+            <a id="replies-{{ comment.id }}" @click="repliesOpen = !repliesOpen" class="font-bold hover:underline cursor-pointer">
+                {% if comment.replies.count or user.is_authenticated %}
+                <div class="inline-block" x-bind:class="repliesOpen && 'rotate-90 duration-300'">
+                    <svg transform ="rotate(90)" width="9" height="9" viewBox="0 0 25 25">
+                        <path d="M24 22h-24l12-20z"/>
+                    </svg>
+                </div>
+                {% endif %}
+                {% if comment.replies.count %}
+                    <span id="repliescount-{{ comment.id }}" class="font-light text-gray-500 ml-1">{{ comment.replies.count }} Resposta{{comment.replies.count|pluralize:'s' }}</span>
+                {% else %}
+                    <span class="font-light text-gray-500 ml-1"> Adicionar Resposta</span>
+                {% endif %}
+            </a>
+            <div class="notificacoes flex gap-2">
+                {% for key, value in notificacoes.items %}
+                    {% if key == 'unread_notifications_comments_replies_add' %}
+                    {% for key, value in value.items %}
+                        {% if key == comment and value %}
+                        <div class="sino">
+                            <span class="nao_lido">
+                                {{ value }}
+                            </span>
+                            <span class="fa fa-bell-o no" aria-hidden="true"></span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                {% endfor %}
+              {% for key, value in notificacoes.items %}
+                {% if key == 'unread_notifications_comments_replies_update' %}
+                  {% for key, value in value.items %}
+                    {% if key == comment and value %}
+                      <div class="sino">
+                        <span class="nao_lido">
+                            {{ value }}
+                        </span>
+                        <span class="fa fa-edit" aria-hidden="true"></span>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            </div>
+        </div>
+        
+        <div class="delete flex items-center gap-4 [&>a:hover]:underline">
+            {% if comment.author == user %}
+                <a href="" hx-get="{% url 'equipamentos:comment-edit' comment.id %}" hx-target="#comentario-{{ comment.id }}" hx-swap="outerHTML">Editar</a>
+            {% endif %}
+            {% if comment.author == user or user.link_type == 'Servidor' or user.is_admin %}
+                <a href="{% url 'equipamentos:comment-delete' comment.id %}">Deletar</a>
+            {% endif %}
+        </div>
+
+        <div x-show="repliesOpen" x-cloak class="basis-full mt-3 pl-8 grid grid-cols-1">
+
+            {% for reply in comment.replies.all %}
+                {% include 'equipamentos/pages/reply.html' %}
+            {% endfor %}
+
+            <form class="replyform flex justify-between" autocomplete="off"
+            hx-post="{% url 'equipamentos:reply-sent' comment.id %}"
+            hx-target="this" 
+            hx-swap="outerHTML">
+                {% csrf_token %}
+                {{ replyform }}
+                <button class="btn btn-success adic ml-2" type="submit">Adicionar</button>
+            </form>
+        </div>
+    </div> 
+</comment>

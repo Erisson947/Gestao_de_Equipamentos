@@ -1,0 +1,177 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+
+
+{% block conteudo %}
+  <div class="conteudo fundo-branco">
+    <div class="centro">
+      <main class="equipamento">
+        <div class="notificacoes flex gap-2">
+          {% for key, value in notificacoes.items %}
+              {% if key == 'unread_notifications_equips_add' %}
+                {% if value %}
+                  <div class="sino">
+                      <span class="fa fa-bell-o no" aria-hidden="true"></span>
+                  </div>
+                {% endif %}
+              {% endif %}
+          {% endfor %}
+        {% for key, value in notificacoes.items %}
+          {% if key == 'unread_notifications_equips_update' %}
+            {% if value %}
+                <div class="sino">
+                  <span class="nao_lido">
+                      {{ value }}
+                  </span>
+                  <span class="fa fa-edit" aria-hidden="true"></span>
+                </div>
+              {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+        <img src="{{ equipamento.capa.url }}" alt="Capa da notícia." class="capa-equipamento">
+        <div class="informacoes-equipamento">
+          <h2 class="titulo-equipamento"><strong>{{ equipamento.titulo }}</strong></h2>
+          <p class="excerto">{{ equipamento.laboratorio }}</p>
+          <div class="equips-tags-container">
+            {% if equipamento.tags.all %}
+              {% for tag in equipamento.tags.all %}
+                <span class="equips-tag-item flex items-center truncate mr-2">{% if tag.capa %}<img src="{{ tag.capa.url }}" class="w-8 h-8 object-cover rounded-full mr-2" alt="Icone da tag.">{% endif %}{{ tag.nome }}</span>
+              {% endfor %}
+            {% else %}
+              <span class="equips-tag-item">sem tags</span>
+            {% endif %}
+          </div>
+          <table class="table equipament">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Total de Equipamentos</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="movie-row">
+                <td></td>
+                {% if equipamento.total_eq >= 0 %}
+                  <td>{{ equipamento.total_eq }}</td>
+                {% else %}
+                  <td>Não informado</td>
+                {% endif %}
+                <td></td>
+              </tr>
+            </tbody>
+            <thead>
+              <tr>
+                <th class="equ_func_color">Equipamentos Funcionando</th>
+                <th class="equ_queb_color">Equipamentos Quebrados</th>
+                <th class="equ_em_manut_color">Equipamentos em Manutenção</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="movie-row">
+                {% if equipamento.equ_func >= 0 %}
+                  <td class="equ_func_color">{{ equipamento.equ_func }}</td>
+                {% else %}
+                  <td>Não informado</td>
+                {% endif %}
+                {% if equipamento.equ_queb >= 0 %}
+                  <td class="equ_queb_color">{{ equipamento.equ_queb }}</td>
+                {% else %}
+                  <td>Não informado</td>
+                {% endif %}
+                {% if equipamento.equ_em_manut >= 0 %}
+                  <td class="equ_em_manut_color">{{ equipamento.equ_em_manut }}</td>
+                {% else %}
+                  <td>Não informado</td>
+                {% endif %}
+              </tr>
+              {% if equipamento.detal_equ_func or equipamento.detal_equ_queb or equipamento.detal_equ_em_manut %}
+                <tr class="movie-row">
+                  {% if equipamento.detal_equ_func %}
+                    <td>{{ equipamento.detal_equ_func }}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  {% if equipamento.detal_equ_queb %}
+                    <td>{{ equipamento.detal_equ_queb }}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                  {% if equipamento.detal_equ_em_manut %}
+                    <td>{{ equipamento.detal_equ_em_manut }}</td>
+                  {% else %}
+                    <td></td>
+                  {% endif %}
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+          <div class="conteudo-equipamento-bd">
+            {{ equipamento.conteudo|safe }}
+          </div>
+          <p class="data-publicacao-equipamento">
+            Publicado em {{ equipamento.criado_em|date:"d/m/Y" }} às {{ equipamento.criado_em|date:"H\hi\m\i\n" }}
+            {% if equipamento.criado_em|date:"d/m/Y H:i" != equipamento.atualizado_em|date:"d/m/Y H:i" %}
+              | Atualizado em {{ equipamento.atualizado_em|date:"d/m/Y" }} às {{ equipamento.atualizado_em|date:"H\hi\m\i\n" }}
+            {% endif %}
+          </p>
+        </div>
+        <div class="barra"></div>
+        {% include "global/partials/mensagens.html" %}
+        <article class="card">
+          <div class="p-4 pb-2">
+            <div class="flex items-center justify-between text-sm px-2">
+              <div id="comments-{{ equipamento.id }}" class="font-bold">
+                  {% if equipamento.comments.count %}
+                    <span id="commentscount-{{ equipamento.id }}" class="font-light text-gray-500 ml-1">{{ equipamento.comments.count }} Comentário{{ equipamento.comments.count|pluralize:'s' }}</span>
+                  {% else %}
+                    <span class="font-light text-gray-500 ml-1">Adicionar comentário</span>
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+        </article>
+        
+        <div class="card !pb-0 -mt-3">
+            <form class="flex items-center p-4" autocomplete="off"
+            hx-post="{% url 'equipamentos:comment-sent' equipamento.id %}" 
+            hx-target="#tab-contents" 
+            hx-swap="afterbegin"
+            _="on htmx:afterRequest reset() me" >
+                {% csrf_token %}
+                {{ commentform }}
+                <button @click="open = false" class="btn btn-success ml-2" type="submit">Adicionar</button>
+            </form>
+        </div>
+        <div class="coments">
+          <div class="comentarios">
+              <div id="tab-contents">
+                {% for comment in equipamento.comments.all %}
+                  {% include 'equipamentos/pages/comment.html' %}
+                {% endfor %}
+              </div>
+          </div>
+        </div>
+      </main>
+      {% if user.link_type == 'Servidor' or user.is_admin %}
+        <div class="botoes">
+          <a href="{% url "equipamentos:editar_equipamento" equipamento.slug %}" class="botao-acao-adm">
+            <img src="{% static "global/icons/editar.png" %}" alt="Ícone de editar." class="icone">
+            <h3>Editar Equipamento</h3>
+          </a>
+          <a href="{% url "equipamentos:remover_equipamento" equipamento.slug %}" class="botao-acao-adm">
+            <img src="{% static "global/icons/remover.png" %}" alt="Ícone de remover." class="icone">
+            <h3>Remover Equipamento</h3>
+          </a>
+        </div>
+      {% else %}
+        <div class="espacamento-fantasma"></div>
+      {% endif %}
+    </div>
+    <form method="get" action="{% url 'equipamentos:marcar_notificacao_lida' equipamento.slug %}" id="marcar_lido"></form>
+  </div>
+
+{% endblock conteudo %}

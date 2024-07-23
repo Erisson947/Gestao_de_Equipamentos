@@ -1,0 +1,79 @@
+{% load static %}
+<reply id="resposta-{{ reply.id }}" class="resp p-4 flex justify-between !py-4 border-t mb-2 {% if reply.status == True %}concluido-reply{% else %}nao-concluido{% endif %}">
+    <div class="flex justify-between items-center">
+        {% if reply.author %}
+            {% if reply.author == user %}
+            <a class="flex items-center gap-1 mb-2" href="{% url "usuarios:perfil" %}">
+                <img class="w-8 h-8 object-cover rounded-full mr-2" src="{{ reply.author.photo2 }}">
+                <span class="font-bold hover:underline">{{ reply.author.name }}</span>
+            </a>
+            {% else %}
+            <div class="flex items-center gap-1 mb-2">
+                <img class="w-8 h-8 object-cover rounded-full mr-2" src="{{ reply.author.photo2 }}">
+                <span class="font-bold hover:underline">{{ reply.author.name }}</span>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="flex items-center gap-1 mb-4">
+                <img class="w-8 h-8 object-cover rounded-full" src="{% static 'global/img/icone-usuario.png' %}">
+                <span class="text-gray-500">Sem autor</span>
+            </div>
+        {% endif %}
+        <div class="notificacoes flex gap-2">
+            {% for key, value in notificacoes.items %}
+                {% if key == 'unread_notifications_replies_update' %}
+                {% for key, value in value.items %}
+                    {% if key == reply and value %}
+                    <div class="sino">
+                        <span class="nao_lido">
+                            {{ value }}
+                        </span>
+                        <span class="fa fa-edit" aria-hidden="true"></span>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in notificacoes.items %}
+                {% if key == 'unread_notifications_replies_add' %}
+                {% for notification in value %}
+                {% for notificacao in notification %}
+                    {% if notificacao.action_object == reply %}
+                    <div class="sino">
+                        <span class="fa fa-bell-o no" aria-hidden="true"></span>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% endfor %}
+                {% endif %}
+            {% endfor %}
+            {% if user.link_type == 'Servidor' or user.is_admin %}
+                <span class="concluir-reply" hx-post="{% url 'equipamentos:reply-status' reply.id %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' hx-target="#resposta-{{ reply.id }}" hx-swap="outerHTML"><i class="fa fa-check"></i></span>
+            {% endif %}
+        </div>
+        
+    </div>
+    <div class="flex items-center justify-between flex-wrap text-sm px-2">
+        {% if form %}
+        <form class="flex items-center p-4" autocomplete="off"
+            hx-post="{% url 'equipamentos:reply-edit' reply.id %}" 
+            hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+            hx-target="#resposta-{{ reply.id }}"
+            hx-swap="outerHTML">
+                {{ form }}
+                <a class="button btn btn-secondary btn-sm ml-1" href="" hx-get="{% url 'equipamentos:reply-status' reply.id %}" hx-target="#resposta-{{ reply.id }}" hx-swap="outerHTML">Cancelar</a>
+            <button @click="open = false" class="btn btn-success ml-2" type="submit">Salvar</button>
+        </form>
+        {% else %}
+        <p class="mr-3 text-xl px-2">{{ reply.body }}</p>
+        {% endif %}
+        <div class="delete flex items-center gap-4 [&>a:hover]:underline">
+            {% if reply.author == user %}
+                <a href="" hx-get="{% url 'equipamentos:reply-edit' reply.id %}" hx-target="#resposta-{{ reply.id }}" hx-swap="outerHTML">Editar</a>
+            {% endif %}
+            {% if reply.author == user or user.link_type == 'Servidor' or user.is_admin %}
+                <a href="{% url 'equipamentos:reply-delete' reply.id %}">Deletar</a>
+            {% endif %}
+        </div>
+    </div>
+</reply> 

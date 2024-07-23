@@ -1,0 +1,26 @@
+{% extends "global/pages/index.html" %}
+
+{% load static %}
+
+
+{% block pagina %}
+
+  <div class="pagina-login fundo-branco">
+    <div class="card p-10 tela-login">
+      <header class="cabecalho-login">
+        <h1><strong>Bem-vindo(a) à GESTÃO DE EQUIPAMENTOS IFRN</strong></h1>
+      </header>
+      <div class="campo-autenticacao">
+        <p>Conecte-se com a sua conta do SUAP</p>
+        <a class="botao-login" href="{% url 'social:begin' 'suap' %}">
+          <b>Autenticar com o SUAP</b>
+        </a>
+      </div>
+      <footer class="rodape-login">
+        <p>Fique informado sobre a quantidade e qualidade dos equipamentos do seu campus</p>
+        <div class="barra"></div>
+      </footer>
+    </div>
+
+  </div>
+{% endblock pagina %}
