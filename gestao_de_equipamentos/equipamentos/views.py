@@ -7,6 +7,7 @@ from equipamentos import forms
 from equipamentos.models import Equipamento, Comment, Reply, Tag, Laboratorio
 from notifications.signals import notify
 from usuarios.models import User
+from django.db.models import Q
 from notifications.models import Notification
 
     
@@ -189,6 +190,12 @@ def comment_sent(request, pk):
 
     return render(request, 'equipamentos/pages/snippets/add_comment.html', context)
 
+def denunciar_comentario(request, pk):
+    comment = get_object_or_404(Comment, id=pk)
+    usuarios = list(User.objects.filter(Q(link_type='Servidor') | Q(is_admin=True), campus=request.user.campus))
+    notify.send(request.user, level=Notification.LEVELS.error, recipient=usuarios, verb='Comentário Denunciado!', description=f'O comentário {comment.body} de {comment.author} foi Denunciado por {request.user}', target=comment.parent_post, action_object=comment)
+    return HttpResponse(status=204)
+
 def comment_edit(request, pk):
     comment = get_object_or_404(Comment, id=pk)
     replyform = forms.ReplyCreateForm()
@@ -230,6 +237,12 @@ def reply_sent(request, pk):
     }
 
     return render(request, 'equipamentos/pages/snippets/add_reply.html', context)
+
+def denunciar_resposta(request, pk):
+    reply = get_object_or_404(Reply, id=pk)
+    usuarios = list(User.objects.filter(Q(link_type='Servidor') | Q(is_admin=True), campus=request.user.campus))
+    notify.send(request.user, level=Notification.LEVELS.error, recipient=usuarios, verb='Resposta Denunciada!', description=f'A resposta {reply.body} de {reply.author} foi Denunciado por {request.user}', target=reply.parent_comment, action_object=reply)
+    return HttpResponse(status=204)
 
 def reply_edit(request, pk):
     reply = get_object_or_404(Reply, id=pk)

@@ -9,59 +9,69 @@
       <div class="barra"></div>
     </header>
     <div class="container">
-      <a class="close pull-left no mb-3" href="{% url 'notificacoes:marcar_todas_notificacoes_lidas' %}">
-         Marcar todas as notificações como lidas
-      </a>
+      <section class="card p-4">
+        <h2><strong>Categorias das notificações</strong></h2>
+        <ul class="tags-checkbox-list">
+            <li>
+                <a class="categs {% if 'equipamentos' == categoria %}highlight{% endif %}" href="{% url 'notificacoes:categoria_notif' 'equipamentos' %}">
+                    <span class="font-bold">equipamentos</span>
+                </a>
+            </li>
+            <li>
+              <a class="categs {% if 'laboratorios' == categoria %}highlight{% endif %}" href="{% url 'notificacoes:categoria_notif' 'laboratorios' %}">
+                  <span class="font-bold">laboratorios</span>
+              </a>
+            </li>
+            <li>
+              <a class="categs {% if 'tags' == categoria %}highlight{% endif %}" href="{% url 'notificacoes:categoria_notif' 'tags' %}">
+                  <span class="font-bold">tags</span>
+              </a>
+            </li>
+            <li>
+              <a class="categs {% if 'chaves_reservs' == categoria %}highlight{% endif %}" href="{% url 'notificacoes:categoria_notif' 'chaves_reservs' %}">
+                  <span class="font-bold">laboratorios reservados</span>
+              </a>
+          </li>
+          <li>
+            <a class="categs {% if 'denuncias' == categoria %}highlight{% endif %}" href="{% url 'notificacoes:categoria_notif' 'denuncias' %}">
+                <span class="font-bold">denúncias</span>
+            </a>
+          </li>
+        </ul>
+    </section>
       <table class="table">
         <thead>
           <tr>
-            <th><div class="flex items-center justify-center gap-2"><strong>Equipamentos</strong> <span class="nao_lido_not">{{ notificacoes_equips.count }}</span></div>
+            {% if categoria %}
+            <th><div class="flex items-center justify-center gap-2"><strong>{{categoria}}</strong> <span class="nao_lido_not">{{ notificacoes.count }}</span></div>
               </th>
-            <th><div class="flex items-center justify-center gap-2"><strong>Laboratorios</strong><span class="nao_lido_not">{{ notificacoes_labs.count }}</span></div>
-              </th>
-            <th><div class="flex items-center justify-center gap-2"><strong>Categorias</strong><span class="nao_lido_not">{{ notificacoes_tags.count }}</span></div>
-              </th>
+            {% else %}
+            <th><div class="flex items-center justify-center gap-2"><strong>Total</strong> <span class="nao_lido_not">{{ notificacoes.count }}</span></div>
+            </th>
+            {% endif %}
           </tr>
         </thead>
-        {% if notificacoes_equips or notificacoes_labs or notificacoes_tags %}
+        {% if notificacoes %}
         <tbody>
           <tr>
             <td>
-              {% if notificacoes_equips %}
-              <div  class="flex items-center justify-center text-align"><a class="close marcar_lidos no" href="{% url 'notificacoes:marcar_notificacoes_lidas_equips' %}">
-                Marcar notificações dos equipamentos como lidas
-              </a></div>
-              {% endif %}
-            </td>
-            <td>
-              {% if notificacoes_labs %}
-              <div  class="flex items-center justify-center text-align"><a class="close marcar_lidos no" href="{% url 'notificacoes:marcar_notificacoes_lidas_labs' %}">
-              Marcar notificações dos laboratórios como lidas
-              </a>
+              <div  class="flex items-center justify-center text-align">
+                {% if categoria %}
+                <a class="close marcar_lidos no" href="{% url 'notificacoes:marcar_notificacoes_lidas' categoria %}">
+                  Marcar notificações dos {{categoria}} como lidas
+                </a>
+                {% else %}
+                <a class="close marcar_lidos no" href="{% url 'notificacoes:marcar_todas_notificacoes_lidas' %}">
+                  Marcar todas as notificações como lidas
+                </a>
+                {% endif %}
               </div>
-              {% endif %}
             </td>
-            <td>
-              {% if notificacoes_tags %}
-              <div class="flex items-center justify-center text-align"><a class="close marcar_lidos no" href="{% url 'notificacoes:marcar_notificacoes_lidas_tags' %}">
-              Marcar notificações dos categorias como lidas
-            </a></div>
-            {% endif %}
-            </td>
+            
           </tr>
           <tr>
             <td>
-              {% for notice in notificacoes_equips %}
-                {% include 'notificacoes/pages/notificacoes_list.html' %}
-              {% endfor %}
-            </td>
-            <td>
-              {% for notice in notificacoes_labs %}
-                {% include 'notificacoes/pages/notificacoes_list.html' %}
-              {% endfor %}
-            </td>
-            <td>
-              {% for notice in notificacoes_tags %}
+              {% for notice in notificacoes %}
                 {% include 'notificacoes/pages/notificacoes_list.html' %}
               {% endfor %}
             </td>

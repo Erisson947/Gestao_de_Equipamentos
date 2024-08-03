@@ -1210,15 +1210,6 @@ section .informacoes-equipamento {
   color: var(--green-800);
 }
 
-@media screen and (max-width: 400px) {
-  #dropzone-container {
-    padding: 2rem;
-  }
-  #dropzone-container > img {
-    width: 7rem;
-    height: 7rem;
-  }
-}
 
 .label-capa,
 .label-anexo {
@@ -1278,11 +1269,17 @@ section .informacoes-equipamento {
 }
 
 
-.tags-checkbox-list label:has(input:checked) {
-  background-color: var(--green-200);
+.tags-checkbox-list label:has(input:checked),
+.tags-checkbox-list .highlight {
+  background-color: var(--green-200) !important;
 }
 
-.tags-checkbox-list label {
+.tags-checkbox-list li {
+  margin: 3px;
+}
+
+.tags-checkbox-list label,
+.tags-checkbox-list .categs {
   background-color: var(--gray-100);
   border-radius: 9999px;
   padding: 0.5rem 1rem;
@@ -2038,5 +2035,15 @@ tr td {
   }
   .botao-fundo-verde {
     width: 20rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #dropzone-container {
+    padding: 2rem;
+  }
+  #dropzone-container > img {
+    width: 7rem;
+    height: 7rem;
   }
 }

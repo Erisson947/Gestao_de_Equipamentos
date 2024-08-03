@@ -56,7 +56,7 @@ def add_laboratorio(request):
                 laboratorio = form.save(commit=False)
                 laboratorio.campus = request.user.campus
                 laboratorio.save()
-                usuarios = list(User.objects.filter(campus=request.user.campus).exclude(registration=request.user.registration))
+                usuarios = list(User.objects.filter(campus=request.user.campus))
                 notify.send(request.user, recipient=usuarios, verb='Novo Laboratório!', description=f'O laboratório {laboratorio.nome} foi adicionado', action_object=laboratorio)
                 return HttpResponse(
                     status=204,

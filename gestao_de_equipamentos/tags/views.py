@@ -50,7 +50,7 @@ def tag_create(request):
     if request.method == "POST":
         if form.is_valid():
             tag = form.save()
-            usuarios = list(User.objects.filter(campus=request.user.campus).exclude(registration=request.user.registration))
+            usuarios = list(User.objects.filter(campus=request.user.campus))
             notify.send(request.user, recipient=usuarios, verb='Nova Categoria!', description=f'A categoria {tag.nome} foi adicionada', action_object=tag )
             return HttpResponse(
                 status=204,

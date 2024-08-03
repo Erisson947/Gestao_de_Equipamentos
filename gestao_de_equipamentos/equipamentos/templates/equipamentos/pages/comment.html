@@ -119,6 +119,9 @@
             {% if comment.author == user %}
                 <a href="" hx-get="{% url 'equipamentos:comment-edit' comment.id %}" hx-target="#comentario-{{ comment.id }}" hx-swap="outerHTML">Editar</a>
             {% endif %}
+            {% if comment.author != user %}
+                <a href="{% url 'equipamentos:denunciar_comentario' comment.id %}">Denunciar</a>
+            {% endif %}
             {% if comment.author == user or user.link_type == 'Servidor' or user.is_admin %}
                 <a href="{% url 'equipamentos:comment-delete' comment.id %}">Deletar</a>
             {% endif %}

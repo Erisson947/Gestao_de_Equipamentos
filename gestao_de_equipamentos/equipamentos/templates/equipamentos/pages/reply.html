@@ -71,6 +71,9 @@
             {% if reply.author == user %}
                 <a href="" hx-get="{% url 'equipamentos:reply-edit' reply.id %}" hx-target="#resposta-{{ reply.id }}" hx-swap="outerHTML">Editar</a>
             {% endif %}
+            {% if reply.author != user %}
+                <a href="{% url 'equipamentos:denunciar_resposta' reply.id %}">Denunciar</a>
+            {% endif %}
             {% if reply.author == user or user.link_type == 'Servidor' or user.is_admin %}
                 <a href="{% url 'equipamentos:reply-delete' reply.id %}">Deletar</a>
             {% endif %}
