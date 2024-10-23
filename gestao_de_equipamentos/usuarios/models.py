@@ -51,6 +51,7 @@ class UserManager(DjangoUserManager):
 
 
 class User(DjangoAbstractUser):
+    
     registration = models.CharField(
         primary_key=True,
         max_length=14,

@@ -3,40 +3,131 @@
 {% load static %}
 
 {% block conteudo %}
-  <div class="conteudo fundo-branco">
-    <header class="cabecalho">
-      <h1><strong>Laboratórios</strong></h1>
-      <div class="barra"></div>
-      {% include "global/partials/mensagens.html" %}
-    </header>
-    <div class="container">
-      {% if user.link_type == 'Servidor' or user.is_admin %}
-        <button hx-get="{% url 'laboratorios:add_laboratorio' %}" hx-target="#dialog" class="btn btn-success btn-sm mb-3">
-          <i class="fa fa-plus-circle"></i> Adicionar Laboratório
-        </button>
-      {% endif %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Laboratórios</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody hx-trigger="load, laboratorioListChanged from:body" hx-get="{% url 'laboratorios:laboratorio_list' %}" hx-target="this">
-          <tr>
-            <td class="spinner-border" role="status">
-              <span class="visually-hidden">Carregando...</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="espacamento-fantasma"></div>
+
+    <div class="title-container">
+      <h2>Laboratórios Multiusuários</h2>
+      <div class="object-status"></div>
+      <div class="action-bar-container">
+          <ul class="action-bar">
+              <li>
+                  <a class="btn success" href="{% url "laboratorios:add_laboratorio" %}">Adicionar laboratório</a>
+              </li>
+          </ul>
+      </div>
     </div>
+    <div style='font-weight: 300;' class="search-and-filters">
+      <form action="" name="filtrarlaboratoriopesquisa_form" id="filtrarlaboratoriopesquisa_form" class="" method="POST">
+          <input type="hidden" name="csrfmiddlewaretoken" value="LYnNB4NVDje98TxUSA2vNutjJMvLD5thmHklGKEO3H9UDEU6Fin0L2VvMB596p0v">
+          <fieldset class="module aligned ">
+             
+              <div class="form-row area_pesquisa ">
+                  <div class="field-box-first">
+                      <label for="id_area_pesquisa">Área de Pesquisa:</label>
+                      <select name="area_pesquisa" autocomplete="off" id="id_area_pesquisa">
+                          <option value="" selected>---------</option>
+                          <option value="1">CIÊNCIAS EXATAS E DA TERRA</option>
+                          <option value="2">CIÊNCIAS BIOLÓGICAS</option>
+                          <option value="3">ENGENHARIAS</option>
+                          <option value="4">CIÊNCIAS DA SAÚDE</option>
+                          <option value="5">CIÊNCIAS AGRÁRIAS</option>
+                          <option value="6">CIÊNCIAS SOCIAIS APLICADAS</option>
+                          <option value="7">CIÊNCIAS HUMANAS</option>
+                          <option value="8">LINGUÍSTICA, LETRAS E ARTES</option>
+                          <option value="9">MULTIDISCIPLINAR</option>
+                          <option value="10">MATEMÁTICA (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="11">PROBABILIDADE E ESTATÍSTICA (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="12">CIÊNCIA DA COMPUTAÇÃO (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="13">ASTRONOMIA (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="14">FÍSICA (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="15">QUÍMICA (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="16">GEOCIÊNCIAS (CIÊNCIAS EXATAS E DA TERRA)</option>
+                          <option value="17">OCEANOGRAFIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="18">BIOLOGIA GERAL (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="19">GENÉTICA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="20">BOTÂNICA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="21">ZOOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="22">MORFOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="23">FISIOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="24">BIOQUÍMICA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="25">BIOFÍSICA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="26">FARMACOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="27">IMUNOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="28">MICROBIOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="29">PARASITOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="30">ECOLOGIA (CIÊNCIAS BIOLÓGICAS)</option>
+                          <option value="31">ENGENHARIA CIVIL (ENGENHARIAS)</option>
+                          <option value="32">ENGENHARIA SANITÁRIA (ENGENHARIAS)</option>
+                          <option value="33">ENGENHARIA DE TRANSPORTES (ENGENHARIAS)</option>
+                          <option value="34">ENGENHARIA DE MINAS (ENGENHARIAS)</option>
+                          <option value="35">ENGENHARIA DE MATERIAIS E METALÚRGICA (ENGENHARIAS)</option>
+                          <option value="36">ENGENHARIA QUÍMICA (ENGENHARIAS)</option>
+                          <option value="37">ENGENHARIA NUCLEAR (ENGENHARIAS)</option>
+                          <option value="38">ENGENHARIA MECÂNICA (ENGENHARIAS)</option>
+                          <option value="39">ENGENHARIA DE PRODUÇÃO (ENGENHARIAS)</option>
+                          <option value="40">ENGENHARIA NAVAL E OCEÃNICA (ENGENHARIAS)</option>
+                          <option value="41">ENGENHARIA AEROESPACIAL (ENGENHARIAS)</option>
+                          <option value="42">ENGENHARIA ELÉTRICA (ENGENHARIAS)</option>
+                          <option value="43">ENGENHARIA BIOMÉDICA (ENGENHARIAS)</option>
+                          <option value="44">MEDICINA (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="45">NUTRIÇÃO (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="46">ODONTOLOGIA (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="47">FARMÁCIA (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="48">ENFERMAGEM (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="49">SAÚDE COLETIVA (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="50">EDUCAÇÃO FÍSICA (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="51">FONOAUDIOLOGIA (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="52">FISIOTERAPIA E TERAPIA OCUPACIONAL (CIÊNCIAS DA SAÚDE)</option>
+                          <option value="53">AGRONOMIA (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="54">RECURSOS FLORESTAIS E ENGENHARIA FLORESTAL (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="55">ENGENHARIA AGRÍCOLA (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="56">ZOOTECNIA (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="57">RECURSOS PESQUEIROS E ENGENHARIA DE PESCA (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="58">MEDICINA VETERINÁRIA (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="59">CIÊNCIA E TECNOLOGIA DE ALIMENTOS (CIÊNCIAS AGRÁRIAS)</option>
+                          <option value="60">DIREITO (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="61">ADMINISTRAÇÃO (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="62">TURISMO (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="63">ECONOMIA (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="64">ARQUITETURA E URBANISMO (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="65">DESENHO INDUSTRIAL (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="66">PLANEJAMENTO URBANO E REGIONAL (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="67">DEMOGRAFIA (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="68">CIÊNCIA DA INFORMAÇÃO (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="69">MUSEOLOGIA (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="70">COMUNICAÇÃO (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="71">SERVIÇO SOCIAL (CIÊNCIAS SOCIAIS APLICADAS)</option>
+                          <option value="72">FILOSOFIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="73">TEOLOGIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="74">SOCIOLOGIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="75">ANTROPOLOGIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="76">ARQUEOLOGIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="77">HISTÓRIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="78">GEOGRAFIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="79">PSICOLOGIA (CIÊNCIAS HUMANAS)</option>
+                          <option value="80">EDUCAÇÃO (CIÊNCIAS HUMANAS)</option>
+                          <option value="81">CIÊNCIA POLÍTICA (CIÊNCIAS HUMANAS)</option>
+                          <option value="82">LINGUÍSTICA (LINGUÍSTICA, LETRAS E ARTES)</option>
+                          <option value="83">LETRAS (LINGUÍSTICA, LETRAS E ARTES)</option>
+                          <option value="84">ARTES (LINGUÍSTICA, LETRAS E ARTES)</option>
+                          <option value="85">INTERDISCIPLINAR (MULTIDISCIPLINAR)</option>
+                          <option value="86">ENSINO (MULTIDISCIPLINAR)</option>
+                          <option value="87">MATERIAIS (MULTIDISCIPLINAR)</option>
+                          <option value="88">BIOTECNOLOGIA (MULTIDISCIPLINAR)</option>
+                      </select>
+                  </div>
+              </div>
+          </fieldset>
+          <div class="submit-row">
+              <input type="submit" name="filtrarlaboratoriopesquisa_form" class="btn success" value="Enviar"/>
+          </div>
+      </form>
+  </div>
+    {% include 'laboratorios/pages/laboratorio_list.html' %}
     <!-- Empty toast to show the message -->
   {% include 'global/partials/toast.html' %}
   <form method="get" action="{% url 'laboratorios:marcar_notificacao_laboratorio_lida' %}" id="marcar_lido"></form>
 
-  </div>
+
   
     <!-- Placeholder for the modal -->
     

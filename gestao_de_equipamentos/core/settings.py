@@ -56,9 +56,11 @@ INSTALLED_APPS = [
     'equipamentos',
     'laboratorios',
     'tags',
+    #'agenda_labs',
     'notificacoes',
     'rolepermissions',
     'notifications',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [

@@ -24,6 +24,7 @@ urlpatterns = [
     path('equipamentos/', include('equipamentos.urls')),
     path('laboratorios/', include('laboratorios.urls')),
     path('tags/', include('tags.urls')),
+    # path('agenda/laboratórios/', include('agenda_labs.urls')),
     path('notificacoes/', include('notificacoes.urls')),
     path('notifications/', include('notifications.urls')),
     path('', include('usuarios.urls')),

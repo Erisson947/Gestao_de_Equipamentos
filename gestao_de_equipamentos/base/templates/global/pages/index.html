@@ -2,10 +2,16 @@
 <html lang="pt-BR">
   <head>
     {% include "global/partials/_head.html" %}
+    {% block login %}{% endblock login %}
+    {% block base %}{% endblock base %}
     <title>{{ title }} - Gestão de Equipamentos</title>
   </head>
-  <body>
+  <body class="{% block body %}{% endblock body %}">
+    
+    <div class="holder">
     {% block pagina %}{% endblock pagina %}
+    </div>
+    {% block script %}{% endblock script %}
   </body>
 </html>
     

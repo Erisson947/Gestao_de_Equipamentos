@@ -1,97 +1,86 @@
 {% load static %}
 
 
-<nav class="sidebar">
-  <a href="#" class="toggleSidebar">
-    <i class='fa fa-chevron-right toggle' aria-hidden="true"></i>
-    <span class="sr-only">Mostrar/Esconder barra lateral</span>
-  </a>
-    <header>
-      <a href="/" title="Gestão de Equipamentos" class="text-icon-headen">
-        <i class='fa fa-wrench icon'></i>
-        <h1>Gestão de Equipamentos</h1>
-      </a>
-      <div id="perfil">
+<a href="#" class="toggleSidebar">
+  <span class="fas fa-chevron-left" aria-hidden="true"></span>
+  <span class="visually-hidden">Mostrar/Esconder barra lateral</span>
+</a>
+<aside class="nav">
+  <header>
+      <h1>
+          <a href="/" title="Gestão de Laboratórios">Gestão de Laboratórios</a>
+      </h1>
+      <div class="notifications">
+          <a href="{% url "notificacoes:notificacoes" %}">
+              <span class="counter ">{{ notifications_notif }}</span>
+              <span class="fas fa-bell" aria-hidden="true"></span>
+              <span class="visually-hidden">Notificações</span>
+          </a>
+      </div>
+      <div id="user-tools">
         {% comment %} {% load cache %} {% endcomment %}
-        {% comment %} {% cache 500 user.photo2 user.first_name %} {% endcomment %}
-        <a class="login" href="{% url "usuarios:perfil" %}">
-          <img src="{{ user.photo2 }}" alt="Ícone de usuário." class="foto-pessoal" >
-          <span class="regular">{{ user.first_name }}</span>
+        {% comment %} {% cache 500 user.photo2 user.name %} {% endcomment %}
+        <a href="{% url "usuarios:perfil" %}" class="user-profile">
+          <div class="photo-circle small">
+            <img src="{{ user.photo2 }}" alt="Foto de {{ user.name }}">
+          </div>
+          <span title="Vínculo: {{ user.registration }}">{{ user.name }}</span>
         </a>
         {% comment %} {% endcache %} {% endcomment %}
       </div>
-    </header>
-    <div class="menu-bar">
-      <div class="menu"> 
-        <div class="barra"></div>
-        <ul class="menu-links">
-          <li id="equipamentos" class="nav-link">
-            <a class="sidebar_link" href="{% url "equipamentos:equipamentos" %}">
-              <i class='fa fa-gears icon'></i>
-              <span class="text nav-text">Equipamentos</span>
-              <span class="nao_lido_not ml-2 mt-1">{{ notifications_equips }}</span>
-            </a>
+  </header>
+  <form id="__buscar_menu__" action="" onsubmit="return false;" class="buscar_menu" role="search">
+    <input type="search" placeholder="Buscar menu" id="__filterinput__"/>
+</form>
+  <nav id="mainmenu">
+      <ul class="_main_menu">
+          <li class="menu-equipamentos">
+              <a href="{% url "equipamentos:equipamentos" %}">
+                  <span class="fas fa-gears" aria-hidden="true"></span>
+                  <span>Equipamentos</span>
+              </a>
           </li>
-          <li id="laboratorios" class="nav-link">
-            <a class="sidebar_link" href="{% url "laboratorios:laboratorios" %}">
-              <i class='fa fa-flask icon' ></i>
-              <span class="text nav-text">Laboratórios</span>
-              <span class="nao_lido_not ml-2 mt-1">{{ notifications_labs }}</span>
-            </a>
+          <li class="menu-laboratorios">
+              <a href="{% url "laboratorios:laboratorios" %}">
+                  <span class="fas fa-flask" aria-hidden="true"></span>
+                  <span>Laboratórios</span>
+              </a>
           </li>
-          <li id="tags" class="nav-link">
-            <a class="sidebar_link" href="{% url "tags:tags" %}">
-              <i class='fa fa-tags icon' ></i>
-              <span class="text nav-text">Categorias</span>
-              <span class="nao_lido_not ml-2 mt-1">{{ notifications_tags }}</span>
-            </a>
+          <li class="menu-categorias">
+              <a href="{% url "tags:tags" %}">
+                  <span class="fas fa-tags" aria-hidden="true"></span>
+                  <span>Categorias</span>
+              </a>
           </li>
-          <li id="notificacoes" class="nav-link">
-            <a class="sidebar_link" href="{% url "notificacoes:notificacoes" %}">
-              <i class='fa fa-bell icon' ></i>
-              <span class="text nav-text">notificações</span>
-              <span class="nao_lido_not ml-2 mt-1">{{ notifications_notif }}</span>
+          <!-- <li class="menu-inicio">
+              <a href="#">
+                  <span class="fas fa-home" aria-hidden="true"></span>
+                  <span>Agenda de Laboratórios</span>
+              </a>
+          </li> -->
+          <li class="menu-logout">
+            <a id="btnSair" title="Sair" href="#">
+              <span class="fas fa-sign-out-alt" aria-hidden="true"></span>
+              <span>Sair</span>
             </a>
-          </li>
-        </ul>
-      </div>
-      <div class="bottom-content">
-        <div class="barra"></div>
-        <li class="">
-          <form id="form-sair" class="form-sair" method="post" action="{% url 'usuarios:logout' %}">
-          {% csrf_token %}
-          <button class="botao botao-sair" type="submit">
-            <i class='fa fa-sign-out icon'></i>
-            <span class="text nav-text">Sair</span>
-          </button>
-        </form>
-    {% if not user.is_authenticated %}
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-      <script>
-        $("#form-sair").submit(function(event) {
-          event.preventDefault();
-          window.location.href="https://suap.ifrn.edu.br/accounts/logout/";
-          this.submit();
-        });
-      </script>
-    {% endif %}
-        </li>  
-        <li class="mode">
-          <div class="moon-sun">
-            <i class='fa fa-moon-o icon moon'></i>
-            <i class='fa fa-sun-o icon sun'></i>
-          </div>
-            <span class="mode-text text">Modo Escuro</span>
-            <div class="toggle-switch">
-            <span class="switch">
-              <i class='fa fa-moon-o icon moon'></i>
-              <i class='fa fa-sun-o icon sun'></i>
-            </span>
-            </div>
-        
-        </li>  
-      </div>
-    </div>
+           
+            
+        </li>
+    </ul>
     
-    
+    <form id="form-sair" method="post" action="{% url 'usuarios:logout' %}" hidden>
+      {% csrf_token %}
+      
+    </form>
+{% if not user.is_authenticated %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script>
+    $("#form-sair").submit(function(event) {
+      event.preventDefault();
+      window.location.href="https://suap.ifrn.edu.br/accounts/logout/";
+      this.submit();
+    });
+  </script>
+{% endif %}
 </nav>
+</aside>

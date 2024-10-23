@@ -1,0 +1,934 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+
+<div class="title-container">
+    <h2>{{ laboratorio.nome }}</h2>
+    <div class="object-status"></div>
+    <div class="action-bar-container">
+        <ul class="action-bar">
+            <li>
+                <a class="btn primary" href="{% url "laboratorios:edit_laboratorio" laboratorio.slug %}">Editar</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="box ">
+    <h3>Dados Gerais</h3>
+    <div>
+        <table class="info">
+            <tr>
+                <td>Nome:</td>
+                <td colspan="3">{{ laboratorio.nome }}</td>
+            </tr>
+            <tr>
+                <td>Coordenador:</td>
+                <td>
+                    <div class="popup-user">
+                        <a href="" class="popup-user-trigger" data-user-id="{{ laboratorio.coordenador.id }}">{{ laboratorio.coordenador }}</a>
+                    </div>
+                </td>
+                <td>Local:</td>
+                <td>{{ laboratorio.local }}</td>
+            </tr>
+            <tr>
+                <td>Descrição:</td>
+                <td colspan="3">{{ laboratorio.descricao }}</td>
+            </tr>
+            <tr>
+                <td>Campus:</td>
+                <td>{{ laboratorio.campus }}</td>
+                <td>Área de Pesquisa:</td>
+                <td>{{ laboratorio.area_pesq }}</td>
+            </tr>
+            <tr>
+                <td>Contato:</td>
+                <td>{{ laboratorio.contato }}</td>
+                <td>Horário de Funcionamento:</td>
+                <td>{{ laboratorio.horario_func }}</td>
+            </tr>
+            <tr>
+                <td>Serviços Realizados:</td>
+                <td colspan="3">{{ laboratorio.serv_real }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<ul></ul>
+<div class="tab-container" data-title="Pesquisadores" data-tab="pesquisadores" data-counter="0">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="#">Adicionar aula</a>
+        </li>
+    </ul>
+    <p class="msg alert">Nenhum pesquisador cadastrado.</p>
+</div>
+<div class="tab-container" data-title="Projetos" data-tab="projetos" data-counter="0">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="#">Adicionar aula</a>
+        </li>
+    </ul>
+    <p class="msg alert">Nenhum projeto vinculado.</p>
+</div>
+<div class="tab-container" data-title="Serviços" data-tab="servicos" data-counter="0">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="#">Adicionar aula</a>
+        </li>
+    </ul>
+    <p class="msg alert">Nenhum serviço cadastrado.</p>
+</div>
+<div class="tab-container" data-title="Equipamentos" data-tab="equipamentos" data-counter="3">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="#">Adicionar aula</a>
+        </li>
+    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Patrimônio</th>
+                <th>Imagem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ul class="pagination">
+                <li class="disabled">Total de 3 itens
+                </li>
+            </ul>
+            <tr>
+                <td>Difratômetro De Raio X</td>
+                <td>DRX 7000 possui tecnologia de óptica policapilar, gerando um poderoso feixe de irradiação sobre as
+                    amostras. Podendo caracterizar os diversos tipos de materiais cristalinos. Marca: Shimadzu. Modelo:
+                    7000</td>
+                <td>119548 - Difratômetro de raios-x completo, com gerador de alta tensão, gabinete, tubo D e raios-x de
+                    2KW (CU LFF) e sistema operacional. MARCA: SHIMADZU CORPORATION.</td>
+                <td>
+                    <a href="https://cdn.suap.ifrn.edu.br/media/upload/pesquisa/fotos/xrd-6000.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=24I2DK2GsCsUIcxsjfkg%2F20241005%2Fus-east-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20241005T132429Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=138daad69269a92e474d3f2d4b787fafa98c6492cea299414a65a4cb082ea982"
+                        class="btn default">Ver foto</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Microscópio Eletrônico de Varredura acoplado com EDS</td>
+                <td>MEV com detector de EDS acoplado para realização de análise de morfologia por SE e BSE e
+                    microanálise química. Marca: Tescan. Modelo: VEGA 3</td>
+                <td>201803 - Microscópio eletrônico de varredura (MEV) conforme especificações técnicas a seguir. demais
+                    especificaçoes no termo de referência do edital.
+                    ÓPTICA DE ELÉTRONS. Resolução: 3.0 nm no modo SEI a 30kV (filamento de W) alto vácuo. Coluna com
+                    3-lentes pré-alinhadas com lentes de baixa aberração final cônica. Aceleração de tensão: de 0.5kV -
+                    40 kV,compassos de 100V. Faixa de corrente para operação normal: 10-6 A 10-12 A. Alinhamento de
+                    fonte através de deslocamento eletromagnético X e Y. Modo de perfil de imagem de feixe incluso.
+                    Estigmador magnético octopolo para rápida e precisa correção de astigmatismo. Seletor de abertura 4
+                    posições para ótimo controle de corrente e divergência. Rotação total de operação 360° em todas as
+                    velocidades de varredura. Foco Wobbler incluso.</td>
+                <td>
+                    <a href="https://cdn.suap.ifrn.edu.br/media/upload/pesquisa/fotos/WhatsApp_Image_2023-06-06_at_09.55.39-8014a77ed7a843e7be92fcd18d84ccda.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=24I2DK2GsCsUIcxsjfkg%2F20241005%2Fus-east-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20241005T132429Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=0b7ba8388ab53c4f2592fe0de92c923307e6922e27c26efa70c1eb57cf414617"
+                        class="btn default">Ver foto</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Espectrofotômetro de raios X de energia dispersiva</td>
+                <td>Espectrômetro de fluorescência de raios-x por energia dispersiva, com cabo SCSI, faixa de análise:
+                    NA - U. Marca: Shimadzu. Modelo: EDX 720</td>
+                <td>126526 - Espectrômetro de fluoresc~encia de raios-x por energia dispersiva, com cabo SCSI, faixa de
+                    análise: NA - U, tamanho de amostras: máx. 300mm x 150mm. MARCA: SHIMADZU CORPORATION</td>
+                <td>
+                    <a href="https://cdn.suap.ifrn.edu.br/media/upload/pesquisa/fotos/WhatsApp_Image_2023-06-06_at_09.55.39_1-54082cc4cbc24c9cbf98f62db3c22394.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=24I2DK2GsCsUIcxsjfkg%2F20241005%2Fus-east-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20241005T132429Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=5a46e871c4d5b3a7d3471a8b5f9d780c476cd3db5927f217f0ec963c25f52d87"
+                        class="btn default">Ver foto</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="tab-container" data-title="Materiais" data-tab="materiais" data-counter="0">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="#">Adicionar aula</a>
+        </li>
+    </ul>
+    <p class="msg alert">Nenhum material cadastrado.</p>
+</div>
+<div class="tab-container" data-title="Fotos" data-tab="fotos" data-counter="1">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="#">Adicionar aula</a>
+        </li>
+    </ul>
+    <div class="box ">
+        <h3>Fotos</h3>
+        <div>
+            <ul class="flex-container gallery">
+                <li class="gallery-item">
+                    <h4 class="title">Laboratório Minerais e Materiais</h4>
+                    <a class="image"
+                        href="https://cdn.suap.ifrn.edu.br/media/upload/pesquisa/fotos/CaracterizacaosDeMineraisEMateriais.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=24I2DK2GsCsUIcxsjfkg%2F20241005%2Fus-east-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20241005T132429Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=b4dbd37884f7a71df89862bce502c17312ce70102404e17fa2138090c7dcf07b">
+                        <img src="https://cdn.suap.ifrn.edu.br/media/upload/pesquisa/fotos/CaracterizacaosDeMineraisEMateriais.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=24I2DK2GsCsUIcxsjfkg%2F20241005%2Fus-east-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20241005T132429Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=b4dbd37884f7a71df89862bce502c17312ce70102404e17fa2138090c7dcf07b"
+                            alt="Laboratório Minerais e Materiais">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="tab-container" data-title="Horários de aula" data-tab="aula_laboratorio">
+    <ul class="action-bar">
+        <li>
+            <a class="btn success" href="{% url 'laboratorios:add_horario' laboratorio.slug %}">Adicionar aula</a>
+        </li>
+    </ul>
+    <div class="box ">
+        <h3>Horários</h3>
+        <div>
+
+            <div class="calendario calendario-mensal table-responsive p-0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%" class="text-center">Matutino</th>
+                            <th class="text-center" width="10%">Segunda</th>
+                            <th class="text-center" width="10%">Terça</th>
+                            <th class="text-center" width="10%">Quarta</th>
+                            <th class="text-center" width="10%">Quinta</th>
+                            <th class="text-center" width="10%">Sexta</th>
+                            <th class="text-center" width="10%">Sábado</th>
+                            <th class="text-center" width="10%">Domingo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <strong>07:00 - 07:45</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Matutino;1' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>07:45 - 08:30</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Matutino;2' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>08:50 - 09:35</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Matutino;3' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>09:35 - 10:20</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Matutino;4' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>10:30 - 11:15</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Matutino;5' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>11:15 - 12:00</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Matutino;6' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="calendario calendario-mensal table-responsive p-0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%" class="text-center">Vespertino</th>
+                            <th class="text-center" width="10%">Segunda</th>
+                            <th class="text-center" width="10%">Terça</th>
+                            <th class="text-center" width="10%">Quarta</th>
+                            <th class="text-center" width="10%">Quinta</th>
+                            <th class="text-center" width="10%">Sexta</th>
+                            <th class="text-center" width="10%">Sábado</th>
+                            <th class="text-center" width="10%">Domingo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <strong>13:00 - 13:45</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Vespertino;1' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>13:45 - 14:30</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Vespertino;2' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>14:50 - 15:35</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Vespertino;3' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>15:35 - 16:20</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Vespertino;4' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>16:30 - 17:15</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Vespertino;5' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>17:15 - 18:00</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Vespertino;6' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="calendario calendario-mensal table-responsive p-0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%" class="text-center">Noturno</th>
+                            <th class="text-center" width="10%">Segunda</th>
+                            <th class="text-center" width="10%">Terça</th>
+                            <th class="text-center" width="10%">Quarta</th>
+                            <th class="text-center" width="10%">Quinta</th>
+                            <th class="text-center" width="10%">Sexta</th>
+                            <th class="text-center" width="10%">Sábado</th>
+                            <th class="text-center" width="10%">Domingo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <strong>18:15 - 19:00</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Noturno;1' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>19:00 - 19:45</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Noturno;2' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>19:45 - 20:30</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Noturno;3' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>20:40 - 21:25</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Noturno;4' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <strong>21:25 - 22:10</strong>
+                            </td>
+                            {% for HORARIO in HORARIOS %}
+                            {% if 'Noturno;5' in HORARIO %}
+                            <td>
+                                {% for horario in horarios %}
+                                {% for Horario in horario.horario %}
+
+
+                                {% if HORARIO in Horario %}
+
+                                <ul>
+                                    <li class="info" title="{{horario.disciplina}}">
+                                        <dl>
+                                            <dt class="visually-hidden">Disciplina</dt>
+                                            <dd>
+                                                <strong>{{horario.disciplina}}</strong>
+                                            </dd>
+                                            <dt class="visually-hidden">Professor</dt>
+                                            <dd>
+                                                {{horario.professor}}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endfor %}
+
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="box ">
+        <h3>Diários</h3>
+        <div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+
+                            <th>Componente</th>
+
+                            <th class="text-center">Horário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+
+                            <td>
+                                <dl>
+                                    <dt class="visually-hidden">Componente:</dt>
+                                    <dd>TIN.0175 - História I(60H) - Médio [60 h/80 Aulas] </dd>
+                                    <dt>Professor:</dt>
+                                    <dd>Francois Karizio Fernandes Leite Cavalcante</dd>
+                                </dl>
+                            </td>
+
+                            <td class="text-center">3M34</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="tab-container" data-title="Agendamentos" data-tab="agendamentos">
+    <div class="search-and-filters">
+        <form action="" name="agendamentolaboratorio_form" id="agendamentolaboratorio_form" class="" method="POST">
+            <input type="hidden" name="csrfmiddlewaretoken"
+                value="zGAUgIdIt3Fjhg6Lda95mrAo9DEtj6Kcapxslo4BTrA4M1tX0SuAkZ2AcseRMqhq">
+            <fieldset class="module aligned ">
+                <div class="form-row professor ">
+                    <div class="field-box-first">
+                        <label for="id_ano">Filtrar por Professor:</label>
+                        <select name="ano" autocomplete="off" id="id_ano">
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="submit-row">
+                <input type="submit" name="agendamentolaboratorio_form" class="btn success" value="Enviar" />
+            </div>
+        </form>
+    </div>
+    <dl class="definition-list flex">
+
+    </dl>
+</div>
+
+
+{% endblock conteudo %}

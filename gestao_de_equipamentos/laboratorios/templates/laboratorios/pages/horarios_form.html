@@ -1,0 +1,285 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+
+<div class="title-container">
+  <h2>{% if horario %}Editar{% else %}Adicionar{% endif %} Laboratório</h2>
+  <div class="object-status"></div>
+  <div class="action-bar-container"></div>
+</div>
+<ul class="action-bar"></ul>
+<form action="" name="horario_form" id="horario_form" class="" method="POST">
+    <table>
+        <thead>
+            <tr>
+                <th width="10%" class="text-center">Matutino</th>
+                <th class="text-center" width="10%">Segunda</th>
+                <th class="text-center" width="10%">Terça</th>
+                <th class="text-center" width="10%">Quarta</th>
+                <th class="text-center" width="10%">Quinta</th>
+                <th class="text-center" width="10%">Sexta</th>
+                <th class="text-center" width="10%">Sábado</th>
+                <th class="text-center" width="10%">Domingo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">
+                    <strong>07:00 - 07:45</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Matutino;1' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>07:45 - 08:30</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Matutino;2' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>08:50 - 09:35</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Matutino;3' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>09:35 - 10:20</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Matutino;4' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>10:30 - 11:15</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Matutino;5' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>11:15 - 12:00</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Matutino;6' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th width="10%" class="text-center">Vespertino</th>
+                <th class="text-center" width="10%">Segunda</th>
+                <th class="text-center" width="10%">Terça</th>
+                <th class="text-center" width="10%">Quarta</th>
+                <th class="text-center" width="10%">Quinta</th>
+                <th class="text-center" width="10%">Sexta</th>
+                <th class="text-center" width="10%">Sábado</th>
+                <th class="text-center" width="10%">Domingo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">
+                    <strong>13:00 - 13:45</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Vespertino;1' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>13:45 - 14:30</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Vespertino;2' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>14:50 - 15:35</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Vespertino;3' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>15:35 - 16:20</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Vespertino;4' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>16:30 - 17:15</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Vespertino;5' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>17:15 - 18:00</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Vespertino;6' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th width="10%" class="text-center">Noturno</th>
+                <th class="text-center" width="10%">Segunda</th>
+                <th class="text-center" width="10%">Terça</th>
+                <th class="text-center" width="10%">Quarta</th>
+                <th class="text-center" width="10%">Quinta</th>
+                <th class="text-center" width="10%">Sexta</th>
+                <th class="text-center" width="10%">Sábado</th>
+                <th class="text-center" width="10%">Domingo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">
+                    <strong>18:15 - 19:00</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Noturno;1' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>19:00 - 19:45</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Noturno;2' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>19:45 - 20:30</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Noturno;3' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>20:40 - 21:25</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Noturno;4' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <strong>21:25 - 22:10</strong>
+                </td>
+                {% for horario in horarios %}
+                    {% if 'Noturno;5' in horario %}
+                                <td class="text-center">
+                                    <input value="{{ horario }}" type="checkbox" name="horario" class="pq" >
+                                </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+  {% csrf_token %}
+  <fieldset class="module aligned ">
+    {% for campo in form %}
+      <div class="form-row {{campo.nome}}">
+          <div class="field-box-first required">
+              <label for="{{ campo.id_for_label }}">{{campo.label}}</label>
+              {{ campo }}
+          </div>
+      </div>
+    {% endfor %}
+      
+  </fieldset>
+  <div class="submit-row">
+      <input type="submit" name="horario_form" class="btn success" value="Salvar"/>
+  </div>
+</form>
+
+
+{% endblock conteudo %}

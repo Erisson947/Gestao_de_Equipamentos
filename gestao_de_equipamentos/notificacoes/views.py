@@ -20,7 +20,7 @@ def notificacoes(request, categoria=None):
     else:
         unread_notifications = Notification.objects.unread().filter(recipient=request.user)
     contexto = {
-        'title': 'Categorias',
+        'title': 'Notificações',
         'notificacoes': unread_notifications,
         'categoria': categoria
     }

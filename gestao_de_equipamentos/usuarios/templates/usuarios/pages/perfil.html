@@ -3,68 +3,74 @@
 {% load static %}
 
 {% block conteudo %}
-    <div class="conteudo fundo-branco">
-      <header class="cabecalho">
-        <h1><strong>Perfil</strong></h1>
-        <div class="barra"></div>
-      </header>
-      <div id="user-tools" class="perfil">
-        {% comment %} {% load cache %} {% endcomment %}
+
+<div class="title-container">
+  <h2>{{ user.full_name }} ({{ user.registration }})</h2>
+  <div class="object-status"></div>
+  <div class="action-bar-container"></div>
+  </div>
+  <div class="box ">
+    <h3>Dados gerais</h3>
+    <div>
+      
+        <div class="photo-circle big">
+          {% comment %} {% load cache %} {% endcomment %}
         {% comment %} {% cache 500 user.photo1 %} {% endcomment %}
-          <img src="{{ user.photo1 }}" alt="Ícone de usuário." class="foto-pessoal" >
-        {% comment %} {% endcache %} {% endcomment %}
-      </div>
-      <div class="informacoes-usuario">
-        <div class="matricula">
-          <h3>Matrícula</h3>
-          <p>{{ user.registration }}</p>
-        </div>
-        <div class="nome">
-          <h3>Nome</h3>
-          <p>{{ user.full_name }}</p>
-        </div>
-        <div class="cpf">
-          <h3>CPF</h3>
-          <p>{{ user.cpf }}</p>
-        </div>
-        {% if user.campus %}
-          <div class="campus">
-            <h3>Campus</h3>
-            <p>{{ user.campus }}</p>
+            <img src="{{ user.photo1 }}" alt="Foto de {{ user.full_name }}">
+            {% comment %} {% endcache %} {% endcomment %}
           </div>
-        {% endif %}
-        {% if user.course %}
-          <div class="curso">
-            <h3>Curso</h3>
-            <p>{{ user.course }}</p>
-          </div>
-        {% endif %}
-        <div class="tipo-usuario">
-          <h3>Vínculo</h3>
-          <p>{{ user.link_type }}</p>
-        </div>
-        <div class="sexo">
-          <h3>Sexo</h3>
-          {% if user.sex == 'M' %}
-            <p>Masculino</p>
-          {% else %}
-            <p>Feminino</p>
-          {% endif %}
-        </div>
-        <div class="data-nascimento">
-          <h3>Data de Nascimento</h3>
-          <p>{{ user.date_of_birth }}</p>
-        </div>
-        <div class="email">
-          <h3>E-mails</h3>
-          <div class="emails">
-            <p>{{ user.personal_email }}</p>
-            <p>{{ user.school_email }}</p>
-            <p>{{ user.academic_email }}</p>
-          </div>
-        </div>
-        <div class="espacamento-fantasma"></div>
-      </div>
+        <dl class="definition-list flex">
+            <div class="list-item flex-basis-50">
+                <dt>Nome</dt>
+                <dd>{{ user.full_name }}</dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>Matrícula</dt>
+                <dd>{{ user.registration }}</dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>E-mail pessoal</dt>
+                <dd>{{ user.personal_email }}</dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>E-mail Acadêmico</dt>
+                <dd>{{ user.academic_email }}</dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>E-mail Escolar/Google Sala de Aula</dt>
+                <dd>
+                    {{ user.school_email }}
+                    
+                </dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>CPF</dt>
+                <dd>{{ user.cpf }}</dd>
+            </div>
+            <div class="list-item">
+                <dt>Data de Nascimento</dt>
+                <dd>{{ user.date_of_birth }}</dd>
+            </div>
+            <div class="list-item">
+                <dt>Vínculo</dt>
+                <dd>{{ user.link_type }}</dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>Curso</dt>
+                <dd> 
+    {{ user.course }} - Campus {{ user.campus }}
+    </dd>
+            </div>
+            
+            <div class="list-item flex-basis-50">
+                <dt>Sexo</dt>
+                <dd>{% if user.sex == M %}Masculino{% else %}Feminino{% endif %}</dd>
+            </div>
+            
+        </dl>
     </div>
+</div>
+
+
 
 {% endblock conteudo %}

@@ -31,11 +31,11 @@ def logout(request):
 def perfil(request):
     context = {'title': f'Perfil - { request.user.name }'}
     # REMOVE LATER
-    #reg = models.User.objects.first()
-    #reg.is_admin = True
-    #reg.is_staff = True
-    #reg.is_superuser = True
-    #reg.save()
+    reg = models.User.objects.first()
+    reg.is_admin = True
+    reg.is_staff = True
+    reg.is_superuser = True
+    reg.save()
     # REMOVE LATER
     return render(
         request,

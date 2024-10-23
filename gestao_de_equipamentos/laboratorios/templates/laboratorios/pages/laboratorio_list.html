@@ -1,40 +1,40 @@
 {% for laboratorio in laboratorios %}
-<tr id="laboratorio-{{ laboratorio.slug }}" class="movie-row">
-  <td>
-    <a class="dropzone-cover-link" href="" hx-get="{% url 'laboratorios:view_equipamentos_laboratorio' laboratorio.slug %}" hx-target="#dialog">{{ laboratorio.nome }}</a>
-    <div class="flex gap-2">
-    {% for key, value in notificacoes.items %}
-      {% if key == 'unread_notifications_labs_update' %}
-        {% for key, value in value.items %}
-          {% if key == laboratorio and value %}
-            <div class="sino">
-              <span class="nao_lido">
-                  {{ value }}
-              </span>
-              <span class="fa fa-edit" aria-hidden="true"></span>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
-    {% for key, value in notificacoes.items %}
-      {% if key == 'unread_notifications_labs_add' %}
-        {% for notificacao in value %}
-            {% if notificacao.action_object == laboratorio %}
-            <div class="sino">
-                <span class="fa fa-bell-o no" aria-hidden="true"></span>
-            </div>
-            {% endif %}
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
+<div class="general-box">
+  <div class="primary-info">
+      <h4 class="title">{{ laboratorio.nome }}</h4>
+      <ul class="action-bar">
+        <li>
+            <a href="{% url "laboratorios:edit_laboratorio" laboratorio.slug %}" class="btn primary">
+                <span class="fas fa-edit" aria-hidden="true"></span>
+                Editar
+            </a>
+        </li>
+          <li>
+              <a href="{% url "laboratorios:visualizar_laboratorio" laboratorio.slug %}" class="btn default">
+                  <span class="fas fa-eye" aria-hidden="true"></span>
+                  Visualizar
+              </a>
+          </li>
+      </ul>
+      <div class="extra-info">
+          <p>{{ laboratorio.descricao|truncatechars:100 }}</p>
+      </div>
   </div>
-  </td>
-  {% if user.link_type == 'Servidor' or user.is_admin %}
-  <td class="botoes-lab">
-    <span hx-get="{% url 'laboratorios:edit_laboratorio' laboratorio.slug %}" hx-target="#dialog"> <i class="fa fa-edit link span-is-link"></i></span>
-    <span type="button" hx-get="{% url 'laboratorios:remove_laboratorio' laboratorio.slug %}" hx-target="#dialog"><i class="fa fa-trash no span-is-link pl-2"></i></span>
-  </td>
-  {% endif %}
-</tr>
+  <dl class="secondary-info">
+      <div class="list-item">
+          <dt>
+              <span class="fas fa-user" aria-hidden="true"></span>
+              Coordenador:
+          </dt>
+          <dd>{{ laboratorio.coordenador }}</dd>
+      </div>
+      <div class="list-item">
+          <dt>
+              <span class="fas fa-phone" aria-hidden="true"></span>
+              Contato:
+          </dt>
+          <dd>{{ laboratorio.contato }}</dd>
+      </div>
+  </dl>
+</div>
 {% endfor %}

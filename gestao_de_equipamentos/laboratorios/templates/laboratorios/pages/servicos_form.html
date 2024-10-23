@@ -5,17 +5,12 @@
 {% block conteudo %}
 
 <div class="title-container">
-  <h2>{% if laboratorio %}Editar{% else %}Adicionar{% endif %} Laboratório</h2>
+  <h2>{% if servico %}Editar{% else %}Adicionar{% endif %} Laboratório</h2>
   <div class="object-status"></div>
   <div class="action-bar-container"></div>
 </div>
 <ul class="action-bar"></ul>
-{% if form.errors %}
-          {% for error in form.non_field_errors %}
-            <p class="erro-formulario">{{ error }}</p>
-          {% endfor %}
-        {% endif %}
-<form action="" name="laboratorio_form" id="laboratorio_form" class="" method="POST">
+<form action="" name="servico_form" id="servico_form" class="" method="POST">
   {% csrf_token %}
   <fieldset class="module aligned ">
     {% for campo in form %}
@@ -29,7 +24,7 @@
       
   </fieldset>
   <div class="submit-row">
-      <input type="submit" name="laboratorio_form" class="btn success" value="Salvar"/>
+      <input type="submit" name="servico_form" class="btn success" value="Salvar"/>
   </div>
 </form>
 

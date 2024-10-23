@@ -3,24 +3,83 @@
 {% load static %}
 
 
-{% block pagina %}
+{% block login %}
+<link rel="stylesheet" href="{% static "global/css/anonima.css" %}">
 
-  <div class="pagina-login fundo-branco">
-    <div class="card p-10 tela-login">
-      <header class="cabecalho-login">
-        <h1><strong>Bem-vindo(a) à GESTÃO DE EQUIPAMENTOS IFRN</strong></h1>
-      </header>
-      <div class="campo-autenticacao">
-        <p>Conecte-se com a sua conta do SUAP</p>
-        <a class="botao-login" href="{% url 'social:begin' 'suap' %}">
-          <b>Autenticar com o SUAP</b>
-        </a>
+<script>
+  jQuery(document).ready(function() {
+    initAll();
+  });
+</script>
+
+{% endblock login %}
+
+{% block body %}anonima login centered{% endblock body %}
+
+
+{% block pagina %}
+<header>
+  <div class="wrapper">
+      <h1>
+          <a href="https://portal.suap.ifrn.edu.br/">Sistema Unificado de Administração Pública</a>
+      </h1>
+      <a href="/">
+          <img src="/static/global/img/logo-suap-ifrn.svg" alt="Logo de Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Norte" aria-hidden="true">
+      </a>
+  </div>
+</header>
+<main class="wrapper">
+  <div class="title-container">
+      <div class="action-bar-container"></div>
+  </div>
+  <div class="flex-container">
+      <div class="flex-item login-bg">
+          <a href="/">
+              <img src="/static/global/img/logo-suap-ifrn.svg" class="logo-instituicao" alt="Logo de Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Norte" aria-hidden="true">
+          </a>
+          <p>Bem-vindo(a) à GESTÃO DE LABORATÓRIOS IFRN</p>
+          <img src="/static/global/img/logo-login.svg" class="login-ilustracao" alt="Ilustração representando alunos utilizando o sistema do Suap num dispositivo móvel" aria-hidden="true">
       </div>
-      <footer class="rodape-login">
-        <p>Fique informado sobre a quantidade e qualidade dos equipamentos do seu campus</p>
-        <div class="barra"></div>
-      </footer>
-    </div>
+      <div class="form-login flex-item">
+          <div class="form">
+              <h2>Login</h2>
+              <h3>Acesse ao GL via Suap IFRN:</h3>
+              
+              <div class="submit-row">
+                  <a class="btn success" href="{% url 'social:begin' 'suap' %}">Autenticar com o SUAP</a>
+              </div>
+              
+              <hr class="mt-5">
+              <div class="form-row mt-5 text-center">
+                <p>Fique informado sobre tudo dos laboratórios do seu campus</p>
+              </div>
+            </div>
+         
+      </div>
+  </div>
+</main>
+<footer class="login-footer">
+  <div class="wrapper">
+    <div class="flex-container my-5">
+      <div class="flex-item">
+          <span class="fas fa-copyright" aria-hidden="true"></span>
+          2024 GL
+      </div>
+      <div class="flex-item">
+          <span class="fab fa-python" aria-hidden="true"></span>
+          Desenvolvimento por Alunos do IFRN-CN
+      </div>
+      <div class="flex-item">
+          <span class="fas fa-server" aria-hidden="true"></span>
+          .
+      </div>
+      <div class="flex-item">
+          <span class="fas fa-id-badge" aria-hidden="true"></span>
+          Licenciado para IFRN
+      </div>
+  </div>
 
   </div>
+</footer>
+  
 {% endblock pagina %}
