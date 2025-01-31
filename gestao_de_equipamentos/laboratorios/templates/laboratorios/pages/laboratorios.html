@@ -10,14 +10,14 @@
       <div class="action-bar-container">
           <ul class="action-bar">
               <li>
-                  <a class="btn success" href="{% url "laboratorios:add_laboratorio" %}">Adicionar laboratório</a>
+                  <a class="btn success" href="{% url "laboratorios:adicionar_laboratorio" %}">Adicionar laboratório</a>
               </li>
           </ul>
       </div>
     </div>
     <div style='font-weight: 300;' class="search-and-filters">
       <form action="" name="filtrarlaboratoriopesquisa_form" id="filtrarlaboratoriopesquisa_form" class="" method="POST">
-          <input type="hidden" name="csrfmiddlewaretoken" value="LYnNB4NVDje98TxUSA2vNutjJMvLD5thmHklGKEO3H9UDEU6Fin0L2VvMB596p0v">
+        {% csrf_token %}
           <fieldset class="module aligned ">
              
               <div class="form-row area_pesquisa ">
@@ -123,19 +123,7 @@
       </form>
   </div>
     {% include 'laboratorios/pages/laboratorio_list.html' %}
-    <!-- Empty toast to show the message -->
-  {% include 'global/partials/toast.html' %}
-  <form method="get" action="{% url 'laboratorios:marcar_notificacao_laboratorio_lida' %}" id="marcar_lido"></form>
 
 
-  
-    <!-- Placeholder for the modal -->
-    
-    {% include 'global/partials/modal.html' %}
-
-  {% block js %}
-    <script src="{% static 'global/js/dialog.js' %}"></script>
-    <script src="{% static 'global/js/toast.js' %}"></script>
-  {% endblock js %}
 
 {% endblock conteudo %}

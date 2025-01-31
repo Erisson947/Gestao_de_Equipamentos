@@ -1,0 +1,37 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+
+<div class="title-container">
+  <h2>{% if chave %}Editar{% else %}Adicionar{% endif %} Chave</h2>
+</div>
+<ul class="action-bar"></ul>
+{% if messages %}
+          {% for message in messages %}
+          <p class="msg errornote error" id="feedback_message">
+            {{ message }}
+        </p>
+          {% endfor %}
+        {% endif %}
+<form action="" name="chave_form" id="chave_form" class="" method="POST">
+  {% csrf_token %}
+  <fieldset class="module aligned ">
+    {% for campo in form %}
+      <div class="form-row {{campo.name}}">
+          <div class="field-box-first required">
+              <label for="{{ campo.id_for_label }}">{{campo.label}}</label>
+              {{ campo }}
+          </div>
+      </div>
+    {% endfor %}
+      
+  </fieldset>
+  <div class="submit-row">
+      <input type="submit" name="chave_form" class="btn success" value="Salvar"/>
+  </div>
+</form>
+
+
+{% endblock conteudo %}

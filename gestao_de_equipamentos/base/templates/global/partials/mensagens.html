@@ -1,7 +1,5 @@
-<div class="messages-container content">
-    {% for message in messages %}
-        <div class="message {{ message.tags }} m-2" id="msg" role="alert">
-            {{ message }}
-        </div>
-    {% endfor %}
-</div>
+{% for message in messages %}
+<p class="msg errornot error" id="feedback_message">
+    {{ message }}
+</p>
+{% endfor %}

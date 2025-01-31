@@ -1,0 +1,51 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+
+<div class="title-container alert">
+    <h2>{{ chave_pegada }}</h2>
+    <div class="object-status">
+        <span class="status status-{% if chave_pegada.situacao == 'devolvida' %}success{% elif chave_pegada.situacao == 'usando' %}alert{% else %}error{% endif %}">{{ chave_pegada.situacao }}</span>
+    </div>
+    <div class="action-bar-container">
+        <ul class="action-bar">
+            <li>
+                <a class="btn success" href="{% url 'pegar_chave:devolver_chave_pegada' chave_pegada.slug %}">Devolver</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="box ">
+    <h3>Dados Gerais</h3>
+    <div>
+        <div class="photo-circle big">
+            {% comment %} {% load cache %} {% endcomment %}
+          {% comment %} {% cache 500 chave_pegada.usuario.photo1 %} {% endcomment %}
+              <img src="{{ chave_pegada.usuario.photo1 }}" alt="Foto de {{ user.full_name }}">
+              {% comment %} {% endcache %} {% endcomment %}
+            </div>
+          <dl class="definition-list-chave flex">
+              <div class="list-item flex-basis-50">
+                  <dt>Nome</dt>
+                  <dd>{{ chave_pegada.usuario.full_name }}</dd>
+              </div>
+              <div class="list-item flex-basis-50">
+                  <dt>Matrícula</dt>
+                  <dd>{{ chave_pegada.usuario.registration }}</dd>
+              </div>
+              <div class="list-item flex-basis-50">
+                <dt>Chave</dt>
+                <dd>{{ chave_pegada.chave.bloco_num }}</dd>
+            </div>
+            <div class="list-item flex-basis-50">
+                <dt>Sala</dt>
+                <dd>{{ chave_pegada.chave.laboratorio|default_if_none:"Sala Comum" }}</dd>
+            </div>
+          </dl>
+    </div>
+</div>
+
+
+{% endblock conteudo %}

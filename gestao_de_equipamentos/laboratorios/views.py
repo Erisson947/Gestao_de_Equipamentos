@@ -4,7 +4,6 @@ from django.http import HttpResponse
 import json
 from laboratorios import forms, models
 from django.contrib import messages
-from equipamentos.models import Equipamento
 from django.db.models import ProtectedError
 from django.db import IntegrityError
 from notifications.models import Notification
@@ -13,6 +12,8 @@ from usuarios.models import User
 
     
 def laboratorios(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('usuarios:login'))
     laboratorios = models.Laboratorio.objects.filter(campus=request.user.campus)
     contexto = {
         'laboratorios': laboratorios,
@@ -28,12 +29,12 @@ def laboratorios(request):
     
 def laboratorio_list(request):
     laboratorios = models.Laboratorio.objects.filter(campus=request.user.campus)
-    unread_notifications_labs_add = Notification.objects.unread().filter(recipient=request.user, verb='Novo Laboratório!')
+    unread_notifications_labs_adicionar = Notification.objects.unread().filter(recipient=request.user, verb='Novo Laboratório!')
     unread_notifications_labs_update = {}
     for labs in laboratorios:
         unread_notifications_labs_update.update({labs:Notification.objects.unread().filter(recipient=request.user, verb='Laboratório Atualizado!', action_object_object_id=labs.id).count()})
     notificacoes = {
-        'unread_notifications_labs_add': unread_notifications_labs_add,
+        'unread_notifications_labs_adicionar': unread_notifications_labs_adicionar,
         'unread_notifications_labs_update': unread_notifications_labs_update
     }
     contexto = {
@@ -51,7 +52,7 @@ def marcar_notificacao_laboratorio_lida(request):
         Notification.objects.mark_all_as_read(recipient=request.user, action_object_object_id=laboratorio.id)
     return HttpResponse(status=204)
 
-def add_laboratorio(request):
+def adicionar_laboratorio(request):
     form = forms.LaboratorioForm(request.POST or None)
     if request.method == "POST":
             if form.is_valid():
@@ -72,7 +73,6 @@ def add_laboratorio(request):
 
 def visualizar_laboratorio(request, slug):
     laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
-    horarios = models.Horario_aula.objects.filter(laboratorio = laboratorio)
     
     dia_sem = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
     turno = ['Matutino', 'Vespertino', 'Noturno']
@@ -86,16 +86,26 @@ def visualizar_laboratorio(request, slug):
                 if Turno != 'Noturno' or Horas != 6:
                     HORARIOS.append(f'{Dia_sem};{Turno};{Horas}',)
                     
+    Horarios = []
+    
+    if laboratorio.horarios:
+        for horario in laboratorio.horarios.all():
+            for Dia_sem in dia_sem:
+                for Turno in turno:        
+                    for Horario in horario.horario:
+                        if Horario.split(';')[0] == Dia_sem and Horario.split(';')[1] == Turno:
+                            Horarios.append({'id': horario.id, 'dia_sem_turno': f'{Horario.split(';')[0]}, {Horario.split(';')[1]}', 'horas': Horario.split(';')[2]})
+                    
     contexto = {
         'laboratorio': laboratorio,
-        'horarios': horarios,
         'HORARIOS': HORARIOS,
+        'Horarios': Horarios,
         'title': f'Visualizar equipamentos de {laboratorio.nome}'
     }
     return render(request, 'laboratorios/pages/visualizar_laboratorio.html', contexto)
 
 
-def edit_laboratorio(request, slug):
+def editar_laboratorio(request, slug):
     laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
     form = forms.LaboratorioForm(request.POST or None, instance=laboratorio)
     if request.method == "POST":
@@ -115,7 +125,7 @@ def edit_laboratorio(request, slug):
     return render(request, 'laboratorios/pages/laboratorio_form.html', contexto)
 
 
-def add_horario(request, slug):
+def adicionar_horario(request, slug):
     laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
     form = forms.HorarioForm(request.POST or None)
     
@@ -131,8 +141,6 @@ def add_horario(request, slug):
                 if Turno != 'Noturno' or Horas != 6:
                     HORARIO.append(f'{Dia_sem};{Turno};{Horas}',)
     
-    print(HORARIO)
-
     
     if request.method == "POST":
 
@@ -150,30 +158,139 @@ def add_horario(request, slug):
     contexto = {
         'horarios': HORARIO,
         'form': form,
-        'title': 'Adicionar Laboratório'
+        'title': 'Adicionar Horário'
     }
     return render(request, 'laboratorios/pages/horarios_form.html', contexto)
 
-
-def remove_laboratorio(request, slug):
+def adicionar_professor(request, slug):
     laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    form = forms.ProfessorForm(request.POST or None)
+    print(form)
+    
     if request.method == "POST":
-        try:
-            laboratorio.delete()
-            usuarios = list(User.objects.filter(campus=request.user.campus).exclude(registration=request.user.registration))
-            notify.send(request.user, recipient=usuarios, verb='Laboratório Deletado!', description=f'O laboratório {laboratorio.nome} foi deletado', action_object=laboratorio)
-            return HttpResponse(
-                status=204,
-                headers={
-                    'HX-Trigger': json.dumps({
-                        "laboratorioListChanged": None,
-                        "showMessage": f"Laboratório {laboratorio.nome} deletado."
-                    })
-                })
-        except ProtectedError:
-            messages.error(request, (f'Você não pode excluir o {laboratorio.nome} agora pois ele ainda tem equipamentos associados a ele!'))
+
+            if form.is_valid():
+                professor = form.save(commit=False)
+                professor.laboratorio = laboratorio
+                professor.save()
+                return redirect(reverse('laboratorios:visualizar_laboratorio',  kwargs={'slug': slug}))
+        
+            else:
+                print(form.errors)
     contexto = {
-        'laboratorio': laboratorio,
-        'title': f'Deletar {laboratorio.nome}'
+        'form': form,
+        'title': 'Adicionar Professor'
     }
-    return render(request, 'laboratorios/pages/laboratorio_delete.html', contexto)
+    return render(request, 'laboratorios/pages/professores_form.html', contexto)
+
+def adicionar_projeto(request, slug):
+    laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    form = forms.ProjetoForm(request.POST or None)
+
+    
+    if request.method == "POST":
+
+            if form.is_valid():
+                professor = form.save(commit=False)
+                professor.laboratorio = laboratorio
+                professor.save()
+                return redirect(reverse('laboratorios:visualizar_laboratorio',  kwargs={'slug': slug}))
+        
+            else:
+                print(form.errors)
+    contexto = {
+        'form': form,
+        'title': 'Adicionar Projeto'
+    }
+    return render(request, 'laboratorios/pages/projeto_form.html', contexto)
+
+def adicionar_servico(request, slug):
+    laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    form = forms.ServicoForm(request.POST or None)
+
+    
+    if request.method == "POST":
+
+            if form.is_valid():
+                professor = form.save(commit=False)
+                professor.laboratorio = laboratorio
+                professor.save()
+                return redirect(reverse('laboratorios:visualizar_laboratorio',  kwargs={'slug': slug}))
+        
+            else:
+                print(form.errors)
+    contexto = {
+        'form': form,
+        'title': 'Adicionar Serviço'
+    }
+    return render(request, 'laboratorios/pages/servicos_form.html', contexto)
+
+def adicionar_equipamento(request, slug):
+    laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    form = forms.EquipamentoForm(request.POST or None)
+
+    
+    if request.method == "POST":
+
+            if form.is_valid():
+                professor = form.save(commit=False)
+                professor.laboratorio = laboratorio
+                professor.save()
+                return redirect(reverse('laboratorios:visualizar_laboratorio',  kwargs={'slug': slug}))
+        
+            else:
+                print(form.errors)
+    contexto = {
+        'form': form,
+        'title': 'Adicionar Equipamento'
+    }
+    return render(request, 'laboratorios/pages/equipamento_form.html', contexto)
+
+def adicionar_material(request, slug):
+    laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    form = forms.MaterialForm(request.POST or None)
+
+    
+    if request.method == "POST":
+
+            if form.is_valid():
+                professor = form.save(commit=False)
+                professor.laboratorio = laboratorio
+                professor.save()
+                return redirect(reverse('laboratorios:visualizar_laboratorio',  kwargs={'slug': slug}))
+        
+            else:
+                print(form.errors)
+    contexto = {
+        'form': form,
+        'title': 'Adicionar Material'
+    }
+    return render(request, 'laboratorios/pages/material_form.html', contexto)
+
+def adicionar_foto(request, slug):
+    laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    form = forms.FotoForm(request.POST or None)
+
+    
+    if request.method == "POST":
+
+            if form.is_valid():
+                professor = form.save(commit=False)
+                professor.laboratorio = laboratorio
+                professor.save()
+                return redirect(reverse('laboratorios:visualizar_laboratorio',  kwargs={'slug': slug}))
+        
+            else:
+                print(form.errors)
+    contexto = {
+        'form': form,
+        'title': 'Adicionar Foto'
+    }
+    return render(request, 'laboratorios/pages/foto_form.html', contexto)
+
+
+def remover_laboratorio(request, slug):
+    laboratorio = get_object_or_404(models.Laboratorio, slug=slug)
+    laboratorio.delete()
+    messages.success(request, f'Laboratório {laboratorio.nome} deletado com sucesso!')
+    return redirect(reverse('pegar_chave:chaves'))

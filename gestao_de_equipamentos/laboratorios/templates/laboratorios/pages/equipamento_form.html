@@ -10,11 +10,11 @@
   <div class="action-bar-container"></div>
 </div>
 <ul class="action-bar"></ul>
-<form action="" name="equipamento_form" id="equipamento_form" class="" method="POST">
+<form action="" name="equipamento_form" id="equipamento_form" class="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <fieldset class="module aligned ">
     {% for campo in form %}
-      <div class="form-row {{campo.nome}}">
+      <div class="form-row {{campo.name}}">
           <div class="field-box-first required">
               <label for="{{ campo.id_for_label }}">{{campo.label}}</label>
               {{ campo }}

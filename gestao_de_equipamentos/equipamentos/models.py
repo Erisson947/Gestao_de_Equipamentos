@@ -7,7 +7,6 @@ from helpers.model import get_object
 
 from django.db import models
 from laboratorios.models import Laboratorio
-from tags.models import Tag
 from usuarios.models import User
 
 
@@ -16,7 +15,6 @@ class Equipamento(models.Model):
     titulo = models.CharField(max_length=200, verbose_name='Nome')
     slug = models.SlugField(max_length=220, unique=True)
     laboratorio = models.ForeignKey(Laboratorio, on_delete=models.PROTECT, related_name='lab')
-    tags = models.ManyToManyField(Tag, related_name='equipamentos')
     total_eq = models.PositiveIntegerField(blank=True, null=True, verbose_name='Total de Equipamentos')
     equ_func = models.PositiveIntegerField(blank=True, null=True, verbose_name='Equipamentos Funcionados')
     equ_queb = models.PositiveIntegerField(blank=True, null=True, verbose_name='Equipamentos Quebrados')

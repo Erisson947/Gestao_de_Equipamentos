@@ -1,0 +1,94 @@
+<div class="title-container">
+    <h2>Mensagens Recebidas</h2>
+    <div class="object-status"></div>
+    <div class="action-bar-container">
+    </div>
+</div>
+<div id="content-main">
+    <div class="module filtered" id="changelist">
+        
+            
+            <div class="results">
+                <table id="result_list">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="action-checkbox-column">
+                                <div class="text">
+                                    <span>
+                                        <input type="checkbox" id="action-toggle" aria-label="Selecione todos os objetos nessa página para uma ação">
+                                    </span>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                            <th scope="col" class="column-get_icone">
+                                <div class="text">
+                                    <span>Ações</span>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                            <th scope="col" class="sortable column-chave">
+                                <div class="text">
+                                    <a href="#">Chave</a>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                            <th scope="col" class="sortable column-nome">
+                                <div class="text">
+                                    <a href="#">Nome</a>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                            <th scope="col" class="sortable column-situacao">
+                                <div class="text">
+                                    <a href="#">Situação</a>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                            <th scope="col" class="sortable column-data_envio sorted descending">
+                                <div class="text">
+                                    <a href="#">Data pega</a>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                            <th scope="col" class="column-get_opcoes">
+                                <div class="text">
+                                    <span>Opções</span>
+                                </div>
+                                <div class="clear"></div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for chave_pegada in chaves_pegadas %}
+                        <tr>
+                            <td class="action-checkbox">
+                                <input type="checkbox" autocomplete="off" name="_selected_action" value="{{chave_pegada.slug}}" class="action-select" aria-label="Selecione esse objeto para uma ação - {{chave_pegada.chave}}-{{chave_pegada.usuario}}">
+                            </td>
+                            <th class="field-get_icone">
+                                
+                                    <a href="{% url 'pegar_chave:visualizar_chave_pegada' chave_pegada.slug %}" class="icon icon-view " title="Visualizar">
+                                        <span class="visually-hidden">Visualizar</span>
+                                    </a>
+                            </th>
+                            <td class="field-chave nowrap">{{ chave_pegada.chave }}</td>
+                            <td class="field-usuario">{{ chave_pegada.usuario }}</td>
+                            <td class="field-situacao"><span class="status status-{% if chave_pegada.situacao == 'devolvida' %}success{% elif chave_pegada.situacao == 'usando' %}alert{% else %}error{% endif %}">{{ chave_pegada.situacao }}</span></td>
+                            <td class="field-data">{{ chave_pegada.pegada_em }}</td>
+                            <td class="field-get_opcoes">
+                                <ul class="action-bar">
+                                    <li>
+                                        <a href="" class="btn danger"> <span class="fa fa-trash"></span></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <p class="msg alert">Nenhuma foto cadastrada.</p>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+        
+    </div>
+</div>

@@ -5,16 +5,16 @@
 {% block conteudo %}
 
 <div class="title-container">
-  <h2>{% if material %}Editar{% else %}Adicionar{% endif %} Laboratório</h2>
+  <h2>{% if material %}Editar{% else %}Adicionar{% endif %} Material</h2>
   <div class="object-status"></div>
   <div class="action-bar-container"></div>
 </div>
 <ul class="action-bar"></ul>
-<form action="" name="material_form" id="material_form" class="" method="POST">
+<form action="" name="material_form" id="material_form" class="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <fieldset class="module aligned ">
     {% for campo in form %}
-      <div class="form-row {{campo.nome}}">
+      <div class="form-row {{campo.name}}">
           <div class="field-box-first required">
               <label for="{{ campo.id_for_label }}">{{campo.label}}</label>
               {{ campo }}

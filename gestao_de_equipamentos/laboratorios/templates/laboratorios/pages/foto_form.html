@@ -1,0 +1,32 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+
+<div class="title-container">
+  <h2>{% if foto %}Editar{% else %}Adicionar{% endif %} Foto</h2>
+  <div class="object-status"></div>
+  <div class="action-bar-container"></div>
+</div>
+<ul class="action-bar"></ul>
+<form action="" name="foto_form" id="foto_form" class="" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <fieldset class="module aligned ">
+    {% for campo in form %}
+      <div class="form-row {{campo.name}}">
+          <div class="field-box-first required">
+              <label for="{{ campo.id_for_label }}">{{campo.label}}</label>
+              {{ campo }}
+          </div>
+      </div>
+    {% endfor %}
+      
+  </fieldset>
+  <div class="submit-row">
+      <input type="submit" name="foto_form" class="btn success" value="Salvar"/>
+  </div>
+</form>
+
+
+{% endblock conteudo %}

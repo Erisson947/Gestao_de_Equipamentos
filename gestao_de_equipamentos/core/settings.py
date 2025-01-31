@@ -14,6 +14,7 @@ from os import getenv
 from pathlib import Path
 from django.contrib.messages import constants
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_htmx',
     'widget_tweaks',
+    'django_celery_results',
+    'django_celery_beat',
 
     # Social Auth
     'social_django',
@@ -55,12 +58,13 @@ INSTALLED_APPS = [
     'usuarios',
     'equipamentos',
     'laboratorios',
-    'tags',
-    #'agenda_labs',
+    'pegar_chave',
     'notificacoes',
     'rolepermissions',
     'notifications',
     'multiselectfield',
+    'bootstrap_datepicker_plus',
+    'tempus_dominus',
 ]
 
 MIDDLEWARE = [
@@ -181,6 +185,7 @@ MESSAGE_TAGS = {
     constants.WARNING: 'message-warning',
 }
 
+TEMPUS_DOMINUS_DATE_FORMAT = 'DD/MM/YYYY'
 
 AUTH_USER_MODEL = 'usuarios.User'
 USER_FIELDS = [
@@ -201,6 +206,8 @@ USER_FIELDS = [
 ]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
@@ -223,4 +230,25 @@ ROLE_PERMISSIONS_MODULE = 'core.roles'
 SOCIAL_AUTH_SUAP_KEY=getenv('SOCIAL_AUTH_SUAP_KEY', '')
 SOCIAL_AUTH_SUAP_SECRET=getenv('SOCIAL_AUTH_SUAP_SECRET', '')
 
+CELERY_BROKER_URL = 'amqp://Erisson:ecmm2609@127.0.0.1:5672'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
+
+CELERY_TIMEZONE = 'America/Recife'
+CELERY_IMPORTS = ['pegar_chave.tasks']
+CELERY_BEAT_SCHEDULE = {
+'checar_chaves_atrasadas': {
+
+    'task': 'pegar_chave.tasks.checar_chaves_atrasadas',
+    'schedule': crontab(minute=0, hour=0), #every day at midnight
+},
+}
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = False
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'erissoncarlos926@gmail.com'
+EMAIL_HOST_PASSWORD = 'yqohfdxzjfnkqdsz'

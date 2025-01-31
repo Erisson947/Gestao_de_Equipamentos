@@ -1,0 +1,88 @@
+<h3>Chaves</h3>
+
+  <div class="chaves">
+
+      <div class="content">
+
+        <div class="modulo modulo-chaves">
+        <h3 class="hint hint-bottom">
+          <span class="fas fa-thumbs-up" aria-hidden="true"></span>
+          Disponíveis
+        </h3>
+        <ul class="success">
+          {% for chave in chaves %}
+          {% if chave.situacao == "disponivel" %}
+          <li>
+            <a href="{% url 'pegar_chave:pegar_chave' chave.slug %}" class="indicator">
+              <span class="fas fa-key indicator-number"></span>
+              <span class="indicator-description">
+                <strong class="indicator-title">
+                 {{ chave.bloco_num }}
+                </strong>
+                <span class="indicator-info">
+                  {{ chave.laboratorio|default_if_none:"Sala Comum" }}
+                </span>
+              </span>
+            </a>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      </div>
+      <div class="content">
+      <div class="modulo modulo-chaves">
+        <h3 class="hint hint-bottom">
+          <span class="fas fa-x" aria-hidden="true"></span>
+          Em Uso
+        </h3>
+        <ul class="error">
+          {% for chave in chaves %}
+          {% if chave.situacao == "em uso" %}
+          <li>
+            <a href="{% for chave_em_uso in chave.chave_pegada.all %}{% if chave_em_uso.situação == chave.situação %}{% url 'pegar_chave:visualizar_chave_pegada' chave_em_uso.slug %}{% endif %}{% endfor %}" class="indicator">
+              <span class="fas fa-key indicator-number"></span>
+              <span class="indicator-description">
+                <strong class="indicator-title">
+                 {{ chave.bloco_num }}
+                </strong>
+                <span class="indicator-info">
+                  {{ chave.laboratorio|default_if_none:"Sala Comum" }}
+                </span>
+              </span>
+            </a>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      </div>
+      <div class="content">
+      <div class="modulo modulo-chaves">
+        <h3 class="hint hint-bottom">
+          <span class="fas fa-exclamation" aria-hidden="true"></span>
+          Atrasadas
+        </h3>
+        <ul class="warning">
+          {% for chave in chaves %}
+          {% if chave.situacao == "atrasada" %}
+          <li>
+            <a href="{% for chave_em_uso in chave.chave_pegada.all %}{% if chave_em_uso.situação == chave.situação %}{% url 'pegar_chave:visualizar_chave_pegada' chave_em_uso.slug %}{% endif %}{% endfor %}" class="indicator">
+              <span class="fas fa-key indicator-number"></span>
+              <span class="indicator-description">
+                <strong class="indicator-title">
+                 {{ chave.bloco_num }}
+                </strong>
+                <span class="indicator-info">
+                  {{ chave.laboratorio|default_if_none:"Sala Comum" }}
+                </span>
+              </span>
+            </a>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      </div>
+  </div>
+

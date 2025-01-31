@@ -1,0 +1,62 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+{% for message in messages %}
+<p class="msg errornote error" id="feedback_message">
+    {{ message }}
+    <a href="{% url 'social:begin' 'suap' %}">Autenticar com o SUAP</a>
+</p>
+{% endfor %}
+
+<div class="title-container">
+  <h2>Pegar Chave {{chave.bloco_num}} - {{chave.laboratorio|default_if_none:"Sala Comum"}}</h2>
+  <div class="object-status"></div>
+  <div class="action-bar-container"></div>
+</div>
+<ul class="action-bar"></ul>
+        {% if form.errors %}
+          {% for error in form.non_field_errors %}
+          <p class="msg errornote error" id="feedback_message">
+              {{ error }}
+          </p>
+          {% endfor %}
+        {% endif %}
+<form action="" name="pegar_chave_form" id="pegar_chave_form" class="" method="{% if usuario %}POST{% else %}GET{% endif %}">
+  {% csrf_token %}
+  <fieldset class="module aligned ">
+    {% if usuario %}
+    <div class="photo-circle big">
+      {% comment %} {% load cache %} {% endcomment %}
+    {% comment %} {% cache 500 usuario.photo1 %} {% endcomment %}
+        <img src="{{ usuario.photo1 }}" alt="Foto de {{ user.full_name }}">
+        {% comment %} {% endcache %} {% endcomment %}
+      </div>
+    <dl class="definition-list flex">
+        <div class="list-item flex-basis-50">
+            <dt>Nome</dt>
+            <dd>{{ usuario.full_name }}</dd>
+        </div>
+        <div class="list-item flex-basis-50">
+            <dt>Matrícula</dt>
+            <dd>{{ usuario.registration }}</dd>
+        </div>
+    </dl>
+    {% else %}
+      <div class="form-row {{campo.name}} {% if messages %}errors{% endif %}">
+          <div class="field-box-first required">
+            <label for="id_usuario">Matrícula: </label>
+            <input type="text" name="usuario" id="id_usuario" maxlength="14" required>
+          </div>
+      </div>
+    {% endif %}
+      
+  </fieldset>
+  <div class="submit-row">
+      <input type="submit" name="pegar_chave_form" class="btn success" value="{% if usuario %}Confirmar{% else %}Salvar{% endif %}"/>
+  </div>
+</form>
+
+
+{% endblock conteudo %}

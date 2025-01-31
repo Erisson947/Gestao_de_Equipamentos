@@ -1,0 +1,70 @@
+
+  <h3>Chaves</h3>
+  <div>
+    <div class="legenda">
+        <p>Legenda:</p>
+        <ul>
+            <li class="success">Disponível</li>
+            <li class="error">Em Uso</li>
+            <li class="extra">Atrasada</li>
+            
+        </ul>
+    </div>
+
+      <div class="chave table-responsive p-0">
+        
+          <table>
+              
+              <tbody>
+                {% for chaves in chaves %}
+                  <tr>
+                      <td class="text-center">
+                          <strong>
+                            
+                                {% for chave in chaves %}
+                                    {% ifchanged chave|make_list|first %}
+                                    {% if forloop.first %}{% else %} / {% endif %}
+                                        {{ chave|make_list|first }}
+                                        
+                                    {% endifchanged %}
+                                    
+                                {% endfor %}
+                            
+                        </strong>
+                      </td>
+                      {% for chave in chaves %}
+
+                      <td class="{% if chave.situacao == 'disponivel' %}success{% elif chave.situacao == 'em uso' %}error{% else %}warning{% endif %} text-center">
+                          <a href="{% if chave.situacao == 'disponivel' %}{% url 'pegar_chave:pegar_chave' chave.slug %}{% else %}{% for chave_em_uso in chave.chave_pegada.all %}{% if chave_em_uso.situação == chave.situação %}{% url 'pegar_chave:visualizar_chave_pegada' chave_em_uso.slug %}{% endif %}{% endfor %}{% endif %}">
+
+                          <ul>
+                              <li title="{{horario.disciplina}}">
+                                  <dl>
+                                      <dt class="visually-hidden">Bloco_Número</dt>
+                                      <dd>
+                                          {{chave.bloco_num}}
+                                      </dd>
+                                      <dt class="visually-hidden">Chave</dt>
+                                      <dd>
+                                          <span class="fas fa-key"></span>
+                                      </dd>
+                                      <dt class="visually-hidden">Editar e excluir</dt>
+                                      <dd>
+                                          <a class="btn info" href="{% url 'pegar_chave:editar_chave' chave.slug %}"><span class="fas fa-edit"></span></a>
+                                          <a class="btn error" href="{% url 'pegar_chave:deletar_chave' chave.slug %}" onclick=" return confirm('Tem certeza de que deseja excluir essa chave?')"><span class="fas fa-trash"></span></a>
+                                      </dd>
+                                  </dl>
+                              </li>
+                          </ul>
+
+                        </a>
+
+                      </td>
+                      {% endfor %}
+                      
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>

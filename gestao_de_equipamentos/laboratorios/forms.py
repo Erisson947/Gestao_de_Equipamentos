@@ -1,6 +1,7 @@
 from django import forms
 
 from django.utils.translation import gettext_lazy as _
+from tempus_dominus.widgets import DatePicker
 
 from laboratorios import models
 
@@ -178,11 +179,216 @@ class HorarioForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['laboratorio', 'horario', 'autor', 'criado_em', 'atualizado_em']
         
-        professor = forms.ModelChoiceField(
-            label="Professor: ",
-            required=False,
-            queryset= models.Professor.objects.all(),
-        )
+    diciplina = forms.CharField(
+        max_length=200,
+        label="Disciplina: ",
+    )
+    
+    professor = forms.ModelChoiceField(
+        queryset= models.Professor.objects.all(),
+        label="Professor: ",
+    )
         
         
+class ProfessorForm(forms.ModelForm):
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Professor
+        fields = '__all__'
+        exclude = ['laboratorio', 'criado_em', 'atualizado_em']
+        
+    nome = forms.ModelChoiceField(
+        queryset= models.User.objects.all(),
+        label='Professor: '
+    )
+        
+class ProjetoForm(forms.ModelForm):
+    TIPO_PROJ = [
+            ('ensino', 'Ensino'),
+            ('pesquisa', 'Pesquisa'),
+            ('extenção', 'Extenção'),
+        ]
+        
+    SITUAÇÃO_PROJ = [
+        ('em edição', 'Em Edição'),
+        ('enviado', 'Enviado'),
+        ('pre-selecionado', 'Pré-Selecionado'),
+        ('em execução', 'Em Execução'),
+        ('encerrado', 'Encerrado'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Projeto
+        fields = '__all__'
+        exclude = ['laboratorio', 'criado_em', 'atualizado_em']
+        
+    titulo = forms.CharField(
+        label="Título: ",
+        max_length=100,
+    )
+    
+    tipo = forms.ChoiceField(
+        choices=TIPO_PROJ,
+        widget=forms.Select(),
+        label="Tipo: "
+    )
+    
+    situação = forms.ChoiceField(
+        choices=SITUAÇÃO_PROJ,
+        widget=forms.Select(),
+        label="Situação: "
+    )
+    
+        
+        
+class ServicoForm(forms.ModelForm):
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Servico
+        fields = '__all__'
+        exclude = ['laboratorio', 'criado_em', 'atualizado_em']
+        
+    descrição = forms.CharField(
+        widget=forms.Textarea,
+        label="Título: ",
+        max_length=2000,
+    )
+    
+    equipamentos = forms.ModelMultipleChoiceField(
+        queryset=models.Equipamento.objects.all(),
+        label="Equipamentos: "
+    )
+    
+    materiais = forms.ModelMultipleChoiceField(
+        queryset=models.Material.objects.all(),
+        label="Materiais: "
+    )
+    
+    ativo = forms.BooleanField(
+        widget=forms.CheckboxInput(),
+        label="Está Ativo? ",
+        required=False
+    )
+        
+        
+        
+class EquipamentoForm(forms.ModelForm):
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Equipamento
+        fields = '__all__'
+        exclude = ['laboratorio', 'criado_em', 'atualizado_em']
+        
+    nome = forms.CharField(
+        label="Nome: ",
+        max_length=200,
+    )
+    
+    imagem = forms.ImageField(
+        widget=forms.FileInput(),
+        label="Imagem: "
+    )
+    
+    descrição = forms.CharField(
+        widget=forms.Textarea,
+        label="Descrição: ",
+        max_length=5000,
+    )
+    patrimônio = forms.CharField(
+        widget=forms.Textarea,
+        label="Patrimônio: ",
+        max_length=5000,
+    )
+    com_problemas = forms.BooleanField(
+        widget=forms.CheckboxInput(),
+        label="Apresenta Problemas? ",
+        required=False
+    )
+        
+class MaterialForm(forms.ModelForm):
+    TIPO_QUANT = [
+            ("" ,"----------"),
+            ('UNIDADES', 'unidades'),
+            ('KG', 'kg'),
+            ('G', 'g'),
+            ('M', 'm'),
+            ('CM', 'cm'),
+        ]
+    
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Material
+        fields = '__all__'
+        exclude = ['laboratorio', 'criado_em', 'atualizado_em']
+        
+    descrição = forms.CharField(
+        widget=forms.Textarea,
+        label="Descrição: ",
+        max_length=300
+    )
+    
+    imagem = forms.ImageField(
+        widget=forms.FileInput(),
+        label="Imagem: "
+    )
+    
+    quantidade = forms.IntegerField(
+        label="Quantidade: ",
+        max_value=30000,
+        min_value=0,
+        required=False
+    )
+    tipo_quant = forms.ChoiceField(
+        choices=TIPO_QUANT,
+        widget=forms.Select(),
+    )
+    valor_unit = forms.IntegerField(
+        label="Valor Unitário: ",
+        widget=forms.Select(
+            attrs={'class': 'money'},
+        ),
+    )
+        
+class FotoForm(forms.ModelForm):
+    required_css_class = 'required'
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Foto
+        fields = '__all__'
+        exclude = ['laboratorio', 'criado_em', 'atualizado_em']
+        
+    titulo = forms.CharField(
+        label="Título: ",
+        max_length=150
+    )
+    
+    imagem = forms.ImageField(
+        widget=forms.FileInput(),
+        label="Imagem: "
+    )
         

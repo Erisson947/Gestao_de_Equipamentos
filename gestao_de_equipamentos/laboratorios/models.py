@@ -4,7 +4,7 @@ from multiselectfield import MultiSelectField
 from helpers.slug import gerar_slug_dinamica
 from helpers.model import get_object
 
-from django.db import models
+
 from usuarios.models import User
 
 class Laboratorio(models.Model):
@@ -102,11 +102,11 @@ class Laboratorio(models.Model):
     nome = models.CharField(max_length=100)
     coordenador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     descricao = models.CharField(max_length=500)
-    contato = models.CharField(max_length=20)
+    contato = models.CharField(max_length=20, null=True, blank=True)
     area_pesq = models.IntegerField(choices=AREA_PESQ, null=True, blank=True)
-    horario_func = models.CharField(max_length=100)
-    local = models.CharField(max_length=100)
-    serv_real = models.CharField(max_length=500)
+    horario_func = models.CharField(max_length=100, null=True, blank=True)
+    local = models.CharField(max_length=100, null=True, blank=True)
+    serv_real = models.CharField(max_length=500, null=True, blank=True)
     campus = models.CharField(max_length=4, null=True, default=None)
     slug = models.SlugField(max_length=220, unique=True)
     criado_em = models.DateTimeField(auto_now_add=True, editable=False)
@@ -114,7 +114,7 @@ class Laboratorio(models.Model):
     
     def __str__(self):
         return self.nome
-
+    
     
     class Meta:
         ordering = ['-criado_em']
@@ -134,12 +134,12 @@ class Laboratorio(models.Model):
     
 class Professor(models.Model):
     nome = models.ForeignKey(User, on_delete=models.CASCADE)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='professores')
     criado_em = models.DateTimeField(auto_now_add=True, editable=False)
     atualizado_em = models.DateTimeField(auto_now=True)
     
-    def __str__(self):
-        return self.nome
+    def __str__(self) -> str:
+        return self.nome.full_name
     
     class Meta:
         ordering = ['-criado_em']
@@ -147,12 +147,12 @@ class Professor(models.Model):
         
 class Equipamento(models.Model):
     imagem = models.ImageField(upload_to='laboratorio/equipamentos/imagem', blank=True, null=True)
-    nome = models.CharField(max_length=200, verbose_name='Nome')
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='laboratorio')
-    descricao = models.TextField(max_length=5000, verbose_name='Descrição')
-    patrimonio = models.TextField(max_length=5000, verbose_name='Patrimônio')
-    situacao = models.BooleanField(default=False)
-    problemas = models.TextField(max_length=5000, null=True, blank=True, verbose_name='Problemas')
+    nome = models.CharField(max_length=200)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='equipamentos')
+    descrição = models.TextField(max_length=5000)
+    patrimônio = models.TextField(max_length=5000)
+    com_problemas = models.BooleanField(default=False)
+    problemas = models.TextField(max_length=5000, null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True, editable=False)
     atualizado_em = models.DateTimeField(auto_now=True)
     
@@ -174,8 +174,8 @@ class Material(models.Model):
     ]  
     
     imagem = models.ImageField(upload_to='laboratorio/materiais/imagem', blank=True, null=True)
-    descrição = models.CharField(max_length=100)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+    descrição = models.CharField(max_length=300)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='materiais')
     quantidade = models.PositiveIntegerField(null=True, blank=True)
     tipo_quant = models.CharField(choices=TIPO_QUANT, max_length=10, null=True, blank=True)
     valor_unit = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -189,7 +189,8 @@ class Material(models.Model):
         ordering = ['-criado_em']
         
 class Servico(models.Model):
-    descrição = models.CharField(max_length=100)
+    descrição = models.CharField(max_length=2000)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='serviços')
     equipamentos = models.ManyToManyField(Equipamento, blank=True)
     materiais = models.ManyToManyField(Material, blank=True)
     ativo = models.BooleanField(default=True)
@@ -222,7 +223,7 @@ class Projeto(models.Model):
     ]
 
     titulo = models.CharField(max_length=100)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='projetos')
     tipo = models.CharField(choices=TIPO_PROJ, max_length=10)
     situação = models.CharField(choices=SITUAÇÃO_PROJ, max_length=20)
     criado_em = models.DateTimeField(auto_now_add=True, editable=False)
@@ -234,6 +235,18 @@ class Projeto(models.Model):
     class Meta:
         ordering = ['-criado_em']
         
+class Foto(models.Model):
+    imagem = models.ImageField(upload_to='laboratorio/fotos/imagem', blank=True, null=True)
+    titulo = models.CharField(max_length=150)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='fotos')
+    criado_em = models.DateTimeField(auto_now_add=True, editable=False)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.titulo
+    
+    class Meta:
+        ordering = ['-criado_em']
 
         
 class Horario_aula(models.Model):
@@ -251,7 +264,7 @@ class Horario_aula(models.Model):
     
     disciplina = models.CharField(max_length=200)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE, blank=True, null=True)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
+    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE, related_name='horarios')
     horario = MultiSelectField(choices=HORARIO, max_length=10000)
     autor = models.ForeignKey(User, on_delete=models.CASCADE)
     criado_em = models.DateTimeField(auto_now_add=True, editable=False)
@@ -264,40 +277,3 @@ class Horario_aula(models.Model):
         ordering = ['-criado_em']
         
     
-        
-        
-class Agenda_lab(models.Model):
-    HORARIO_AGEND = [
-        (1, '07:00 - 07:45'),
-        (2, '07:45 - 08:30'),
-        (3, '08:50 - 09:35'),
-        (4, '09:35 - 10:20'),
-        (5, '10:30 - 11:15'),
-        (6, '11:15 - 12:00'),
-        (7, '13:00 - 13:45'),
-        (8, '13:45 - 14:30'),
-        (9, '14:50 - 15:35'),
-        (10, '15:35 - 16:20'),
-        (11, '16:30 - 17:15'),
-        (12, '17:15 - 18:00'),
-        (13, '18:15 - 19:00'),
-        (14, '19:00 - 19:45'),
-        (15, '19:45 - 20:30'),
-        (16, '20:40 - 21:25'),
-        (17, '21:25 - 22:10'),
-    ]
-    
-    titulo = models.CharField(max_length=100)
-    motivo = models.CharField(max_length=200)
-    laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
-    dia = models.DateField()
-    horario = MultiSelectField(choices=HORARIO_AGEND, max_length=50)
-    criado_em = models.DateTimeField(auto_now_add=True, editable=False)
-    atualizado_em = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.titulo
-    
-    class Meta:
-        ordering = ['-criado_em']

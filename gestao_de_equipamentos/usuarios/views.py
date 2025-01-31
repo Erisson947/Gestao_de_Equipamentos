@@ -11,7 +11,7 @@ from django.contrib.auth.models import Group
 
 def login(request):
     if request.user.is_authenticated:
-        return redirect(reverse('equipamentos:equipamentos'))
+        return redirect(reverse('laboratorios:laboratorios'))
     contexto = {
         'title': 'Login',
     }

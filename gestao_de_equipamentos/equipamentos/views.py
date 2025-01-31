@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from equipamentos import forms
-from equipamentos.models import Equipamento, Comment, Reply, Tag, Laboratorio
+from equipamentos.models import Equipamento, Comment, Reply, Laboratorio
 from notifications.signals import notify
 from usuarios.models import User
 from django.db.models import Q
@@ -22,56 +22,15 @@ def autocomplete(request):
         return JsonResponse(titulos, safe=False)
 
 def equipamentos(request):
-    if not request.user.is_authenticated:
-        return redirect(reverse('usuarios:login'))
     contexto = {}
     laboratorios = Laboratorio.objects.filter(campus=request.user.campus)
-    tags = Tag.objects.all()
-    search = request.GET.get('search')
-    filter = request.GET.get('filter')
-    tag = request.GET.get('tags_filtro')
-    if filter:
-        if tag and search:
-            equipamentos = Equipamento.objects.filter(laboratorio__campus=request.user.campus, tags__slug=tag, titulo__icontains=search, laboratorio__slug=filter)
-        elif tag:
-            equipamentos = Equipamento.objects.filter(laboratorio__campus=request.user.campus, tags__slug=tag, laboratorio__slug=filter)
-        elif search:
-            equipamentos = Equipamento.objects.filter(laboratorio__campus=request.user.campus, titulo__icontains=search, laboratorio__slug=filter)
-        else:
-            equipamentos = Equipamento.objects.filter(laboratorio__campus=request.user.campus, laboratorio__slug=filter)
-    else:
-        equipamentos = Equipamento.objects.filter(laboratorio__campus=request.user.campus)
-    
-    unread_notifications_equips_update = {}
-    unread_notifications_comments_replies_add = {}
-    unread_notifications_comments_replies_update = {}
-    for equips in equipamentos:
-        unread_notifications_replies_add = unread_notifications_replies_update = 0
-        unread_notifications_comments_add = Notification.objects.unread().filter(verb='Novo Comentário!', recipient=request.user, target_object_id=equips.id).count()
-        unread_notifications_comments_update = Notification.objects.unread().filter(verb='Comentário Atualizado!', recipient=request.user, target_object_id=equips.id).count()
-        unread_notifications_equips_update.update({equips:Notification.objects.unread().filter(verb='Equipamento Atualizado!', recipient=request.user, action_object_object_id=equips.id).count(),})
-        for comment in equips.comments.all():
-            unread_notifications_replies_add += Notification.objects.unread().filter(verb='Nova Resposta!', recipient=request.user, target_object_id=comment.id).count()
-            unread_notifications_replies_update += Notification.objects.unread().filter(verb='Resposta Atualizada!', recipient=request.user, target_object_id=comment.id).count()
-        unread_notifications_comments_replies_add.update({equips:unread_notifications_comments_add+unread_notifications_replies_add,})
-        unread_notifications_comments_replies_update.update({equips:unread_notifications_comments_update+unread_notifications_replies_update,})
-        
-    unread_notifications_equips_add = Notification.objects.unread().filter(recipient=request.user, verb='Novo Equipamento!')
-    
-    notificacoes = {'unread_notifications_comments_replies_add': unread_notifications_comments_replies_add,
-                    'unread_notifications_comments_replies_update': unread_notifications_comments_replies_update,
-                    'unread_notifications_equips_add': unread_notifications_equips_add,
-                    'unread_notifications_equips_update': unread_notifications_equips_update}
-    
+
     paginator = Paginator(equipamentos, 4)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+
                                 
     contexto.update({
-        'equipamentos': page_obj,
+
         'laboratorios': laboratorios,
-        'tags': tags,
-        'notificacoes': notificacoes,
         'title': 'Equipamentos'
     })
     return render(
@@ -83,39 +42,11 @@ def equipamentos(request):
 
 def visualizar_equipamento(request, slug):
     equipamento = get_object_or_404(Equipamento, slug=slug)
-    unread_notifications_comments_add = Notification.objects.unread().filter(recipient=request.user, verb='Novo Comentário!', target_object_id=equipamento.id)
-    unread_notifications_equips_add = Notification.objects.unread().filter(recipient=request.user, verb='Novo Equipamento!', action_object_object_id=equipamento.id)
-    unread_notifications_equips_update = Notification.objects.unread().filter(recipient=request.user, verb='Equipamento Atualizado!', action_object_object_id=equipamento.id).count()
-    unread_notifications_replies_add = list()
-    unread_notifications_comments_update = {}
-    unread_notifications_replies_update = {}
-    unread_notifications_comments_replies_add = {}
-    unread_notifications_comments_replies_update = {}
-    for comment in equipamento.comments.all():
-        unread_notifications_replies_add.append(Notification.objects.unread().filter(recipient=request.user,verb='Nova Resposta!', target_object_id=comment.id))
-        unread_notifications_comments_update.update({comment:Notification.objects.unread().filter(recipient=request.user, verb='Comentário Atualizado!', target_object_id=equipamento.id, action_object_object_id=comment.id).count(),})
-        unread_notifications_comments_replies_add.update({comment:Notification.objects.unread().filter(verb='Nova Resposta!', recipient=request.user, target_object_id=comment.id).count(),})
-        unread_notifications_comments_replies_update.update({comment:Notification.objects.unread().filter(verb='Resposta Atualizada!', recipient=request.user, target_object_id=comment.id).count(),})
-        for reply in comment.replies.all():
-            unread_notifications_replies_update.update({reply:Notification.objects.unread().filter(recipient=request.user,verb='Resposta Atualizada!', target_object_id=comment.id, action_object_object_id=reply.id).count(),})
-            
-    notificacoes = {
-        'unread_notifications_comments_add': unread_notifications_comments_add,
-        'unread_notifications_replies_add': unread_notifications_replies_add,
-        'unread_notifications_equips_add': unread_notifications_equips_add,
-        'unread_notifications_comments_update': unread_notifications_comments_update,
-        'unread_notifications_replies_update': unread_notifications_replies_update,
-        'unread_notifications_equips_update': unread_notifications_equips_update,
-        'unread_notifications_comments_replies_add': unread_notifications_comments_replies_add,
-        'unread_notifications_comments_replies_update': unread_notifications_comments_replies_update,
-    }
-    
     
     commentform = forms.CommentCreateForm()
     replyform = forms.ReplyCreateForm()
     contexto={
         'equipamento': equipamento,
-        'notificacoes': notificacoes,
         'commentform' : commentform,
         'replyform' : replyform,
         'title': f'Visualizar Equipamento - {equipamento.titulo}'

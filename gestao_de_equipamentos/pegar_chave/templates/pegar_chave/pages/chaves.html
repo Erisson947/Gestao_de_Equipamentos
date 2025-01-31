@@ -1,0 +1,56 @@
+{% extends "global/pages/base.html" %}
+
+{% load static %}
+
+{% block conteudo %}
+
+    <div class="title-container">
+      <h2>Pegar Chave</h2>
+      <div class="object-status"></div>
+      <div class="action-bar-container">
+          <ul class="action-bar">
+              <li>
+                  <a class="btn success" href="{% url "pegar_chave:adicionar_chave"%}">Adicionar Chave</a>
+              </li>
+          </ul>
+      </div>
+    </div>
+    <div class="tab-container" data-title="Chaves" data-tab="chaves" data-counter="{% if estilo == 'table' %}{% for chaves in chaves %}{{chaves|length}}{% endfor %}{% else %}{{chaves|length}}{% endif %}">
+      <div class="action-bar-container">
+        <ul class="action-bar">
+          <li>
+              <a class="btn {% if estilo == 'table' %}primary{% else %}default{% endif %}" href="{% url "pegar_chave:estilo_chaves" 'table' %}"><span class="fas fa-table" aria-hidden="true"></span></a>
+          </li>
+          <li>
+            <a class="btn {% if estilo == 'list' %}primary{% else %}default{% endif %}" href="{% url "pegar_chave:estilo_chaves" 'list' %}"><span class="fas fa-list" aria-hidden="true"></span></a>
+        </li>
+        </ul>
+      </div>
+    
+    {% if estilo == 'table' %}
+      {% include 'pegar_chave/pages/chaves_table.html' %}
+    {% else %}
+    {% include 'pegar_chave/pages/chaves_list.html' %}
+    {% endif %}
+    
+    </div>
+    <div class="tab-container" data-title="Chaves Pegadas" data-tab="chaves_pegadas" data-counter="{{chaves_pegadas|length}}">
+      <div class="action-bar-container">
+        <ul class="action-bar">
+          
+        </ul>
+      </div>
+    
+    
+      {% include 'pegar_chave/pages/chaves_pegadas.html' %}
+    
+    
+    
+    
+    </div>
+  
+
+
+
+
+{% endblock conteudo %}

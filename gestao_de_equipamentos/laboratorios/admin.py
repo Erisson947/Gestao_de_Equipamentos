@@ -27,6 +27,11 @@ class MaterialAdmin(admin.ModelAdmin):
     list_display = ['descrição']
     search_fields = ['descrição']
     
+@admin.register(models.Foto)
+class FotoAdmin(admin.ModelAdmin):
+    list_display = ['titulo']
+    search_fields = ['titulo']
+    
 @admin.register(models.Horario_aula)
 class Horario_aulaAdmin(admin.ModelAdmin):
     list_display = ['disciplina']
@@ -34,11 +39,6 @@ class Horario_aulaAdmin(admin.ModelAdmin):
     
 @admin.register(models.Projeto)
 class ProjetoAdmin(admin.ModelAdmin):
-    list_display = ['titulo']
-    search_fields = ['titulo']
-    
-@admin.register(models.Agenda_lab)
-class Agenda_labAdmin(admin.ModelAdmin):
     list_display = ['titulo']
     search_fields = ['titulo']
     

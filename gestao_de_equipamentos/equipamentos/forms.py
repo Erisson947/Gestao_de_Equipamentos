@@ -38,14 +38,7 @@ class EquipamentoForm(forms.ModelForm):
         label='Nome'
     )
     
-    tags = forms.ModelMultipleChoiceField(
-        queryset=models.Tag.objects.all(),
-        widget=forms.CheckboxSelectMultiple(
-            attrs={'class': 'tags-checkbox-list'},
-        ),
-        required=False,
-        label='Categorias',
-    )
+
     
     laboratorio = forms.ModelChoiceField(
         label='Laboratorio',
